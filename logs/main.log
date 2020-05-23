@@ -1,0 +1,21 @@
+20:11:33 INFO: starting simulation...
+20:11:33 INFO: simulation end
+20:11:33 INFO: getting data from instance...
+20:11:33 INFO: #########
+20:11:33 INFO: 	 Status: Optimal
+20:11:33 INFO: X_0 0.0
+20:11:33 INFO: X_1 0.0
+20:11:33 INFO: X_2 0.0
+20:11:33 INFO: X_3 1.0
+20:11:33 INFO: X_4 0.0
+20:11:33 INFO: X_5 0.0
+20:11:33 INFO: X_6 0.0
+20:11:33 INFO: X_7 0.0
+20:11:33 INFO: X_8 0.0
+20:11:33 INFO: X_9 11.0
+20:11:33 INFO: 
+	of: 109.0
+	sol:
+[0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 11.0] 
+	time:0.020045995712280273
+20:11:33 INFO: #########
