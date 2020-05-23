@@ -11,18 +11,27 @@ class Instance():
             sim_setting {[type]} -- [description]
         """
         logging.info("starting simulation...")
-        self.max_size = sim_setting['knapsack_size']
-        self.sizes = np.around(np.random.uniform(
-            sim_setting['low_size'],
-            sim_setting['high_size'],
-            sim_setting['n_items']
+        self.ar=sim_setting['antenna_row']
+        self.ac=sim_setting['antenna_column']
+        self.Q = sim_setting['max_capacity']*np.ones((sim_setting['antenna_row'],sim_setting['antenna_column']))
+        self.R = np.around(np.random.uniform(
+            sim_setting['min_demand'],
+            sim_setting['max_demand'],
+            (sim_setting['antenna_row']-1)*(sim_setting['antenna_column']-1)
         ))
-        self.profits = np.around(np.random.uniform(
-            sim_setting['low_profit'],
-            sim_setting['high_profit'],
-            sim_setting['n_items']
+        self.R=np.reshape(self.R,[(sim_setting['antenna_row']-1),(sim_setting['antenna_column']-1)])
+        self.C = np.around(np.random.uniform(
+            sim_setting['min_cost'],
+            sim_setting['max_cost'],
+            sim_setting['antenna_row']*sim_setting['antenna_column']
         ))
-        self.n_items = sim_setting['n_items']
+        self.C=np.reshape(self.C,[(sim_setting['antenna_row']),(sim_setting['antenna_column'])])
+        # self.profits = np.around(np.random.uniform(
+        #     sim_setting['low_profit'],
+        #     sim_setting['high_profit'],
+        #     sim_setting['n_items']
+        # ))
+        # self.n_items = sim_setting['n_items']
         logging.info("simulation end")
 
     def get_data(self):
@@ -33,8 +42,9 @@ class Instance():
         """
         logging.info("getting data from instance...")
         return {
-            "profits": self.profits,
-            "sizes": self.sizes,
-            "max_size": self.max_size,
-            "n_items": self.n_items
+            "demand": self.R,
+            "capacity": self.Q,
+            "cost": self.C,
+            "antennaRow": self.ar,
+            "antennaColumn": self.ac
         }

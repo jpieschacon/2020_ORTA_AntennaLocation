@@ -1,8 +1,9 @@
 {
-	"knapsack_size": 50,
-	"low_size": 1,
-	"high_size": 10,
-	"n_items": 10,
-	"low_profit": 5,
-	"high_profit": 10
+	"antenna_row":3, 
+	"antenna_column":3,
+	"max_capacity":50,
+	"max_demand":25,
+	"min_demand":0,
+	"max_cost":10000,
+	"min_cost":1000
 }
