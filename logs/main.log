@@ -1,29 +1,34 @@
-21:42:21 INFO: starting simulation...
-21:42:21 INFO: simulation end
-21:42:21 INFO: getting data from instance...
-21:42:21 INFO: #########
-21:42:22 INFO: 	 Status: Optimal
-21:52:23 INFO: #########
-21:54:39 INFO: starting simulation...
-21:54:39 INFO: simulation end
-21:54:39 INFO: getting data from instance...
-21:54:39 INFO: #########
-21:54:39 INFO: 	 Status: Optimal
-21:54:39 INFO: #########
-21:55:05 INFO: starting simulation...
-21:55:05 INFO: simulation end
-21:55:05 INFO: getting data from instance...
-21:55:05 INFO: #########
-21:55:05 INFO: 	 Status: Optimal
-21:55:05 INFO: #########
-21:55:35 INFO: starting simulation...
-21:55:35 INFO: simulation end
-21:55:35 INFO: getting data from instance...
-21:55:44 INFO: #########
-21:55:47 INFO: 	 Status: Optimal
-21:55:53 INFO: #########
-21:57:32 INFO: starting simulation...
-21:57:32 INFO: simulation end
-21:57:32 INFO: getting data from instance...
-21:57:32 INFO: #########
-21:57:32 INFO: 	 Status: Optimal
+01:19:16 INFO: starting simulation...
+01:19:16 INFO: simulation end
+01:19:16 INFO: getting data from instance...
+01:19:16 INFO: #########
+01:19:19 INFO: 	 Status: Optimal
+01:19:19 INFO: q_(0,_0) 0.0
+01:19:19 INFO: q_(0,_1) 0.0
+01:19:19 INFO: q_(1,_0) 7.0
+01:19:19 INFO: q_(1,_1) 7.0
+01:19:19 INFO: q_NE_(0,_0) 0.0
+01:19:19 INFO: q_NE_(0,_1) 0.0
+01:19:19 INFO: q_NE_(1,_0) 7.0
+01:19:19 INFO: q_NE_(1,_1) 0.0
+01:19:19 INFO: q_NW_(0,_0) 0.0
+01:19:19 INFO: q_NW_(0,_1) 0.0
+01:19:19 INFO: q_NW_(1,_0) 0.0
+01:19:19 INFO: q_NW_(1,_1) 7.0
+01:19:19 INFO: q_SE_(0,_0) 0.0
+01:19:19 INFO: q_SE_(0,_1) 0.0
+01:19:19 INFO: q_SE_(1,_0) 0.0
+01:19:19 INFO: q_SE_(1,_1) 0.0
+01:19:19 INFO: q_SW_(0,_0) 0.0
+01:19:19 INFO: q_SW_(0,_1) 0.0
+01:19:19 INFO: q_SW_(1,_0) 0.0
+01:19:19 INFO: q_SW_(1,_1) 0.0
+01:19:19 INFO: x_(0,_0) 0.0
+01:19:19 INFO: x_(0,_1) 0.0
+01:19:19 INFO: x_(1,_0) 1.0
+01:19:19 INFO: x_(1,_1) 1.0
+01:19:19 INFO: z_(0,_0,_0) 0.0
+01:19:19 INFO: z_(0,_0,_1) 0.0
+01:19:19 INFO: z_(0,_0,_2) 1.0
+01:19:19 INFO: z_(0,_0,_3) 0.0
+01:19:19 INFO: z_(0,_0,_4) 0.0
