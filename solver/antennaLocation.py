@@ -125,4 +125,4 @@ class AntennaLocation():
 
         # logging.info("\n\tof: {}\n\tsol:\n{} \n\ttime:{}".format(of, sol_x, comp_time))
         logging.info("#########")
-        return of, sol, comp_time
+        return of, sol_x, comp_time

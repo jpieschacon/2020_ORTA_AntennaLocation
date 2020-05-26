@@ -6,6 +6,7 @@ import numpy as np
 from simulator.instance import Instance
 from solver.antennaLocation import AntennaLocation
 from heuristic.simpleHeu import SimpleHeu
+from graph.graph import Graph
 
 
 np.random.seed(0)
@@ -36,6 +37,9 @@ if __name__ == '__main__':
         dict_data,
         verbose=True
     )
+    
+    grid = Graph(inst,sol_exact)
+    grid.plot()
     # print(of_exact, sol_exact, comp_time_exact)
 
     # heu = SimpleHeu(2)
