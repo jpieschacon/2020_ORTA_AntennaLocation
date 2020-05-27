@@ -31,7 +31,7 @@ if __name__ == '__main__':
     prb = AntennaLocation()
 
     # prb = SimpleKnapsack()
-    of_exact, sol_exact, sol_q, comp_time_exact = prb.solve(
+    of_exact, sol_exact, sol_q, comp_time_exact, flagSolver = prb.solve(
         dict_data,
         verbose=True
     )
