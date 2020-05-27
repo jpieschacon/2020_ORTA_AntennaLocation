@@ -84,10 +84,10 @@ class AntennaLocation():
                 prob += lpSum(z[m, n, k] for k in range(5)) == 1, f"2_{m}_{n}"
                 prob += 4 - lpSum([x[i, j]] for i in [m, m + 1] for j in [n, n + 1]) == lpSum([(4 - k) * z[m, n, k] for k in range(5)]), f"3_{m}_{n}"
                 for k in range(5):
-                    prob += q_SE[m, n] * k - R[m, n] * x[m, n] <= (1 - z[m, n, k]) * Q[m, n], f"4_{m}_{n}_{k}"
-                    prob += q_SW[m, n + 1] * k - R[m, n] * x[m, n + 1] <= (1 - z[m, n, k]) * Q[m, n + 1], f"5_{m}_{n}_{k}"
-                    prob += q_NE[m + 1, n] * k - R[m, n] * x[m + 1, n] <= (1 - z[m, n, k]) * Q[m + 1, n], f"6_{m}_{n}_{k}"
-                    prob += q_NW[m + 1, n + 1] * k - R[m, n] * x[m + 1, n + 1] <= (1 - z[m, n, k]) * Q[m + 1, n + 1], f"7_{m}_{n}_{k}"
+                    prob += q_SE[m, n] * k - R[m, n] * x[m, n] <= (1 - z[m, n, k]) * Q[m, n]*100, f"4_{m}_{n}_{k}"
+                    prob += q_SW[m, n + 1] * k - R[m, n] * x[m, n + 1] <= (1 - z[m, n, k]) * Q[m, n + 1]*100, f"5_{m}_{n}_{k}"
+                    prob += q_NE[m + 1, n] * k - R[m, n] * x[m + 1, n] <= (1 - z[m, n, k]) * Q[m + 1, n]*100, f"6_{m}_{n}_{k}"
+                    prob += q_NW[m + 1, n + 1] * k - R[m, n] * x[m + 1, n + 1] <= (1 - z[m, n, k]) * Q[m + 1, n + 1]*100, f"7_{m}_{n}_{k}"
                 prob += q_SE[m, n] + q_SW[m, n + 1] + q_NE[m + 1, n] + q_NW[m + 1, n + 1] == R[m, n], f"lina_{m}_{n}"
         for i in range(dict_data['antennaRow']):
             for j in range(dict_data['antennaColumn']):
@@ -103,7 +103,9 @@ class AntennaLocation():
             maxSeconds=time_limit,
             fracGap=gap
         )
-        solver.solve(prob)
+
+        flagSolver = solver.solve(prob)
+
         end = time.time()
         logging.info("\t Status: {}".format(LpStatus[prob.status]))
 
@@ -114,16 +116,19 @@ class AntennaLocation():
         sol_x = np.zeros((dict_data['antennaRow'], dict_data['antennaColumn']))
         sol_q = np.zeros((dict_data['antennaRow'], dict_data['antennaColumn']))
 
-        for var in sol:
-            logging.info("{} {}".format(var.name, var.varValue))
-            if var.varValue != 0:
-                print(var.name, "\t", var.varValue)
-            if "x_" in var.name:
-                index = re.findall(r'\d+', var.name.replace('x_', ''))
-                sol_x[int(index[0]), int(index[1])] = var.varValue
-            elif "q_(" in var.name:
-                index = re.findall(r'\d+', var.name.replace('q_', ''))
-                sol_q[int(index[0]), int(index[1])] = var.varValue
-        # logging.info("\n\tof: {}\n\tsol:\n{} \n\ttime:{}".format(of, sol_x, comp_time))
-        logging.info("#########")
-        return of, sol_x, sol_q, comp_time
+        if flagSolver != -1:
+            for var in sol:
+                logging.info("{} {}".format(var.name, var.varValue))
+                if var.varValue != 0:
+                    print(var.name, "\t", var.varValue)
+                if "x_" in var.name:
+                    index = re.findall(r'\d+', var.name.replace('x_', ''))
+                    sol_x[int(index[0]), int(index[1])] = var.varValue
+                elif "q_(" in var.name:
+                    index = re.findall(r'\d+', var.name.replace('q_', ''))
+                    sol_q[int(index[0]), int(index[1])] = var.varValue
+            # logging.info("\n\tof: {}\n\tsol:\n{} \n\ttime:{}".format(of, sol_x, comp_time))
+            logging.info("#########")
+        else:
+            print("Infeasible solution")
+        return of, sol_x, sol_q, comp_time, flagSolver
