@@ -1,6 +1,6 @@
 {
-	"antenna_row":10,
-	"antenna_column":10,
+	"antenna_row":3,
+	"antenna_column":3,
 	"max_capacity":40,
 	"max_demand":25,
 	"min_demand":0,
