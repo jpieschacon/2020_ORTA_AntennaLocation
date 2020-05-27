@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import time
 import logging
-
 import numpy as np
 from pulp import *
 import re
@@ -113,16 +112,18 @@ class AntennaLocation():
         comp_time = end - start
 
         sol_x = np.zeros((dict_data['antennaRow'], dict_data['antennaColumn']))
-        sol_z = np.zeros((dict_data['antennaRow'] - 1, dict_data['antennaColumn'] - 1))
+        sol_q = np.zeros((dict_data['antennaRow'], dict_data['antennaColumn']))
 
         for var in sol:
             logging.info("{} {}".format(var.name, var.varValue))
             if var.varValue != 0:
-                print(var.name)
+                print(var.name, "\t", var.varValue)
             if "x_" in var.name:
                 index = re.findall(r'\d+', var.name.replace('x_', ''))
                 sol_x[int(index[0]), int(index[1])] = var.varValue
-
+            elif "q_(" in var.name:
+                index = re.findall(r'\d+', var.name.replace('q_', ''))
+                sol_q[int(index[0]), int(index[1])] = var.varValue
         # logging.info("\n\tof: {}\n\tsol:\n{} \n\ttime:{}".format(of, sol_x, comp_time))
         logging.info("#########")
-        return of, sol_x, comp_time
+        return of, sol_x, sol_q, comp_time

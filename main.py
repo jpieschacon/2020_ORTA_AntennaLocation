@@ -8,9 +8,7 @@ from solver.antennaLocation import AntennaLocation
 from heuristic.simpleHeu import SimpleHeu
 from graph.graph import Graph
 
-
 np.random.seed(0)
-
 
 if __name__ == '__main__':
     log_name = "./logs/main.log"
@@ -29,16 +27,16 @@ if __name__ == '__main__':
         sim_setting
     )
     dict_data = inst.get_data()
-    
-    prb=AntennaLocation()
+
+    prb = AntennaLocation()
 
     # prb = SimpleKnapsack()
-    of_exact, sol_exact, comp_time_exact = prb.solve(
+    of_exact, sol_exact, sol_q, comp_time_exact = prb.solve(
         dict_data,
         verbose=True
     )
-    
-    grid = Graph(inst,sol_exact)
+
+    grid = Graph(inst, sol_exact, sol_q)
     grid.plot()
     # print(of_exact, sol_exact, comp_time_exact)
 
@@ -47,7 +45,7 @@ if __name__ == '__main__':
     #     dict_data
     # )
     # print(of_heu, sol_heu, comp_time_heu)
-    
+
     # # printing results of a file
     # file_output = open(
     #     "./results/exp_general_table.csv",

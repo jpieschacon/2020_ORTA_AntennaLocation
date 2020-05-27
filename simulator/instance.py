@@ -11,21 +11,21 @@ class Instance():
             sim_setting {[type]} -- [description]
         """
         logging.info("starting simulation...")
-        self.ar=sim_setting['antenna_row']
-        self.ac=sim_setting['antenna_column']
-        self.Q = sim_setting['max_capacity']*np.ones((sim_setting['antenna_row'], sim_setting['antenna_column']))
+        self.ar = sim_setting['antenna_row']
+        self.ac = sim_setting['antenna_column']
+        self.Q = sim_setting['max_capacity'] * np.ones((sim_setting['antenna_row'], sim_setting['antenna_column']))
         self.R = np.around(np.random.uniform(
             sim_setting['min_demand'],
             sim_setting['max_demand'],
-            (sim_setting['antenna_row']-1)*(sim_setting['antenna_column']-1)
+            (sim_setting['antenna_row'] - 1) * (sim_setting['antenna_column'] - 1)
         ))
-        self.R=np.reshape(self.R,[(sim_setting['antenna_row']-1),(sim_setting['antenna_column']-1)])
+        self.R = np.reshape(self.R, [(sim_setting['antenna_row'] - 1), (sim_setting['antenna_column'] - 1)])
         self.C = np.around(np.random.uniform(
             sim_setting['min_cost'],
             sim_setting['max_cost'],
-            sim_setting['antenna_row']*sim_setting['antenna_column']
+            sim_setting['antenna_row'] * sim_setting['antenna_column']
         ))
-        self.C=np.reshape(self.C,[(sim_setting['antenna_row']),(sim_setting['antenna_column'])])
+        self.C = np.reshape(self.C, [(sim_setting['antenna_row']), (sim_setting['antenna_column'])])
         # self.profits = np.around(np.random.uniform(
         #     sim_setting['low_profit'],
         #     sim_setting['high_profit'],
