@@ -95,7 +95,8 @@ class AntennaLocation():
                 prob += q[i, j] <= Q[i, j] * x[i, j], f"9_{i}_{j}"
 
         prob.writeLP("./logs/{}.lp".format(problem_name))
-
+        problem_instances={'x': x , 'q' : q , 'q_NW' : q_NW, 'q_NE' : q_NE, 'q_SW' : q_SW, 'q_SE' : q_SE, 'z' : z, 'R' : R, 'c' : c, 'Q' : Q, 'prob' : prob}
+        
         msg_val = 1 if verbose else 0
         start = time.time()
         solver = COIN_CMD(
@@ -131,4 +132,4 @@ class AntennaLocation():
             logging.info("#########")
         else:
             print("Infeasible solution")
-        return of, sol_x, sol_q, comp_time, flagSolver
+        return of, sol_x, sol_q, comp_time, flagSolver, problem_instances
