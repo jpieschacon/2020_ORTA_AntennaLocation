@@ -28,26 +28,26 @@ if __name__ == '__main__':
     )
     dict_data = inst.get_data()
 
-    prb = AntennaLocation()
+    prb = AntennaLocation(dict_data)
 
     
-    of_exact, sol_exact, sol_q, comp_time_exact, flagSolver, problem_instances = prb.solve(
-        dict_data,
-        verbose=True
-    )
+    # of_exact, sol_exact, sol_q, comp_time_exact, flagSolver = prb.solve(
+    #     dict_data,
+    #     verbose=True
+    # )
 
-    grid = Graph(inst, sol_exact, sol_q)
-    grid.plot()
-    print(of_exact, sol_exact, comp_time_exact)
+    # grid = Graph(inst, sol_exact, sol_q)
+    # grid.plot()
+    # print(of_exact, comp_time_exact)
    
-    heu = SimpleHeu(2)
+    heu = SimpleHeu(prb)
     of_heu, sol_heux, sol_heuq, comp_time_heu = heu.solve(
-        dict_data,problem_instances
+        dict_data,100000
     )
     
     grid = Graph(inst, sol_heux, sol_heuq)
     grid.plot()
-    print(of_heu, sol_heux, comp_time_heu)
+    print(of_heu, comp_time_heu)
     
     # print(of_heu, sol_heu, comp_time_heu)
 

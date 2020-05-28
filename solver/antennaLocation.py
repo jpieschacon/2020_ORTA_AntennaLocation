@@ -7,8 +7,77 @@ import re
 
 
 class AntennaLocation():
-    def __init__(self):
-        pass
+    def __init__(self,dict_data):
+        logging.info("#########")
+        # items = range(dict_data['n_items'])
+
+        self.x = LpVariable.dicts(
+            "x", ((i, j) for i in range(dict_data['antennaRow']) for j in range(dict_data['antennaColumn'])),
+            lowBound=0,
+            cat="Binary"
+        )
+
+        self.q = LpVariable.dicts(
+            "q", ((i, j) for i in range(dict_data['antennaRow']) for j in range(dict_data['antennaColumn'])),
+            lowBound=0,
+            cat=LpContinuous
+        )
+
+        self.q_NW = LpVariable.dicts(
+            "q_NW", ((i, j) for i in range(dict_data['antennaRow']) for j in range(dict_data['antennaColumn'])),
+            lowBound=0,
+            cat=LpContinuous
+        )
+        self.q_NE = LpVariable.dicts(
+            "q_NE", ((i, j) for i in range(dict_data['antennaRow']) for j in range(dict_data['antennaColumn'])),
+            lowBound=0,
+            cat=LpContinuous
+        )
+
+        self.q_SW = LpVariable.dicts(
+            "q_SW", ((i, j) for i in range(dict_data['antennaRow']) for j in range(dict_data['antennaColumn'])),
+            lowBound=0,
+            cat=LpContinuous
+        )
+
+        self.q_SE = LpVariable.dicts(
+            "q_SE", ((i, j) for i in range(dict_data['antennaRow']) for j in range(dict_data['antennaColumn'])),
+            lowBound=0,
+            cat=LpContinuous
+        )
+
+        self.z = LpVariable.dicts(
+            "z", ((m, n, k) for m in range(dict_data['antennaRow'] - 1) for n in range(dict_data['antennaColumn'] - 1) for k in range(5)),
+            lowBound=0,
+            cat="Binary"
+        )
+        # LpContinuous
+        self.R = dict_data['demand']
+        self.c = dict_data['cost']
+        self.Q = dict_data['capacity']
+
+        self.problem_name = "antennalocation"
+
+        self.prob = LpProblem(self.problem_name, LpMinimize)
+        self.prob += lpSum([self.c[i, j] * self.x[i, j] for i in range(dict_data['antennaRow']) for j in range(dict_data['antennaColumn'])]), "obj_func"
+        for m in range(dict_data['antennaRow'] - 1):
+            for n in range(dict_data['antennaColumn'] - 1):
+                self.prob += lpSum(self.z[m, n, k] for k in range(5)) == 1, f"2_{m}_{n}"
+                self.prob += 4 - lpSum([self.x[i, j]] for i in [m, m + 1] for j in [n, n + 1]) == lpSum([(4 - k) * self.z[m, n, k] for k in range(5)]), f"3_{m}_{n}"
+                for k in range(5):
+                    self.prob += self.q_SE[m, n] * k - self.R[m, n] * self.x[m, n] <= (1 - self.z[m, n, k]) * self.Q[m, n]*100, f"4_{m}_{n}_{k}"
+                    self.prob += self.q_SW[m, n + 1] * k - self.R[m, n] * self.x[m, n + 1] <= (1 - self.z[m, n, k]) * self.Q[m, n + 1]*100, f"5_{m}_{n}_{k}"
+                    self.prob += self.q_NE[m + 1, n] * k - self.R[m, n] * self.x[m + 1, n] <= (1 - self.z[m, n, k]) * self.Q[m + 1, n]*100, f"6_{m}_{n}_{k}"
+                    self.prob += self.q_NW[m + 1, n + 1] * k - self.R[m, n] * self.x[m + 1, n + 1] <= (1 - self.z[m, n, k]) * self.Q[m + 1, n + 1]*100, f"7_{m}_{n}_{k}"
+                self.prob += self.q_SE[m, n] + self.q_SW[m, n + 1] + self.q_NE[m + 1, n] + self.q_NW[m + 1, n + 1] == self.R[m, n], f"lina_{m}_{n}"
+        for i in range(dict_data['antennaRow']):
+            for j in range(dict_data['antennaColumn']):
+                self.prob += self.q[i, j] == self.q_NW[i, j] + self.q_NE[i, j] + self.q_SW[i, j] + self.q_SE[i, j], f"8_{i}_{j}"
+                self.prob += self.q[i, j] <= self.Q[i, j] * self.x[i, j], f"9_{i}_{j}"
+
+        self.prob.writeLP("./logs/{}.lp".format(self.problem_name))
+        
+        
 
     def solve(
             self, dict_data, time_limit=None,
@@ -27,75 +96,6 @@ class AntennaLocation():
         Returns:
             [type] -- [description]
         """
-        logging.info("#########")
-        # items = range(dict_data['n_items'])
-
-        x = LpVariable.dicts(
-            "x", ((i, j) for i in range(dict_data['antennaRow']) for j in range(dict_data['antennaColumn'])),
-            lowBound=0,
-            cat="Binary"
-        )
-
-        q = LpVariable.dicts(
-            "q", ((i, j) for i in range(dict_data['antennaRow']) for j in range(dict_data['antennaColumn'])),
-            lowBound=0,
-            cat=LpContinuous
-        )
-
-        q_NW = LpVariable.dicts(
-            "q_NW", ((i, j) for i in range(dict_data['antennaRow']) for j in range(dict_data['antennaColumn'])),
-            lowBound=0,
-            cat=LpContinuous
-        )
-        q_NE = LpVariable.dicts(
-            "q_NE", ((i, j) for i in range(dict_data['antennaRow']) for j in range(dict_data['antennaColumn'])),
-            lowBound=0,
-            cat=LpContinuous
-        )
-
-        q_SW = LpVariable.dicts(
-            "q_SW", ((i, j) for i in range(dict_data['antennaRow']) for j in range(dict_data['antennaColumn'])),
-            lowBound=0,
-            cat=LpContinuous
-        )
-
-        q_SE = LpVariable.dicts(
-            "q_SE", ((i, j) for i in range(dict_data['antennaRow']) for j in range(dict_data['antennaColumn'])),
-            lowBound=0,
-            cat=LpContinuous
-        )
-
-        z = LpVariable.dicts(
-            "z", ((m, n, k) for m in range(dict_data['antennaRow'] - 1) for n in range(dict_data['antennaColumn'] - 1) for k in range(5)),
-            lowBound=0,
-            cat="Binary"
-        )
-        # LpContinuous
-        R = dict_data['demand']
-        c = dict_data['cost']
-        Q = dict_data['capacity']
-
-        problem_name = "antennalocation"
-
-        prob = LpProblem(problem_name, LpMinimize)
-        prob += lpSum([c[i, j] * x[i, j] for i in range(dict_data['antennaRow']) for j in range(dict_data['antennaColumn'])]), "obj_func"
-        for m in range(dict_data['antennaRow'] - 1):
-            for n in range(dict_data['antennaColumn'] - 1):
-                prob += lpSum(z[m, n, k] for k in range(5)) == 1, f"2_{m}_{n}"
-                prob += 4 - lpSum([x[i, j]] for i in [m, m + 1] for j in [n, n + 1]) == lpSum([(4 - k) * z[m, n, k] for k in range(5)]), f"3_{m}_{n}"
-                for k in range(5):
-                    prob += q_SE[m, n] * k - R[m, n] * x[m, n] <= (1 - z[m, n, k]) * Q[m, n]*100, f"4_{m}_{n}_{k}"
-                    prob += q_SW[m, n + 1] * k - R[m, n] * x[m, n + 1] <= (1 - z[m, n, k]) * Q[m, n + 1]*100, f"5_{m}_{n}_{k}"
-                    prob += q_NE[m + 1, n] * k - R[m, n] * x[m + 1, n] <= (1 - z[m, n, k]) * Q[m + 1, n]*100, f"6_{m}_{n}_{k}"
-                    prob += q_NW[m + 1, n + 1] * k - R[m, n] * x[m + 1, n + 1] <= (1 - z[m, n, k]) * Q[m + 1, n + 1]*100, f"7_{m}_{n}_{k}"
-                prob += q_SE[m, n] + q_SW[m, n + 1] + q_NE[m + 1, n] + q_NW[m + 1, n + 1] == R[m, n], f"lina_{m}_{n}"
-        for i in range(dict_data['antennaRow']):
-            for j in range(dict_data['antennaColumn']):
-                prob += q[i, j] == q_NW[i, j] + q_NE[i, j] + q_SW[i, j] + q_SE[i, j], f"8_{i}_{j}"
-                prob += q[i, j] <= Q[i, j] * x[i, j], f"9_{i}_{j}"
-
-        prob.writeLP("./logs/{}.lp".format(problem_name))
-        problem_instances={'x': x , 'q' : q , 'q_NW' : q_NW, 'q_NE' : q_NE, 'q_SW' : q_SW, 'q_SE' : q_SE, 'z' : z, 'R' : R, 'c' : c, 'Q' : Q, 'prob' : prob}
         
         msg_val = 1 if verbose else 0
         start = time.time()
@@ -105,13 +105,13 @@ class AntennaLocation():
             fracGap=gap
         )
 
-        flagSolver = solver.solve(prob)
+        flagSolver = solver.solve(self.prob)
 
         end = time.time()
-        logging.info("\t Status: {}".format(LpStatus[prob.status]))
+        logging.info("\t Status: {}".format(LpStatus[self.prob.status]))
 
-        sol = prob.variables()
-        of = value(prob.objective)
+        sol = self.prob.variables()
+        of = value(self.prob.objective)
         comp_time = end - start
 
         sol_x = np.zeros((dict_data['antennaRow'], dict_data['antennaColumn']))
@@ -120,8 +120,8 @@ class AntennaLocation():
         if flagSolver != -1:
             for var in sol:
                 logging.info("{} {}".format(var.name, var.varValue))
-                if var.varValue != 0:
-                    print(var.name, "\t", var.varValue)
+                # if var.varValue != 0:
+                    # print(var.name, "\t", var.varValue)
                 if "x_" in var.name:
                     index = re.findall(r'\d+', var.name.replace('x_', ''))
                     sol_x[int(index[0]), int(index[1])] = var.varValue
@@ -132,4 +132,4 @@ class AntennaLocation():
             logging.info("#########")
         else:
             print("Infeasible solution")
-        return of, sol_x, sol_q, comp_time, flagSolver, problem_instances
+        return of, sol_x, sol_q, comp_time, flagSolver

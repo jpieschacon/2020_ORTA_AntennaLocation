@@ -6,11 +6,11 @@ import numpy as np
 from pulp import *
 
 class SimpleHeu():
-    def __init__(self, n):
-        self.n = n
+    def __init__(self, prb):
+        self.prb = prb
 
     def solve(
-        self, dict_data , problem_instances, N_iter=10
+        self, dict_data , N_iter=10
     ):
         """[summary]
         
@@ -26,35 +26,36 @@ class SimpleHeu():
             [type] -- [description]
         """
         
-        c=problem_instances['c']
-        Q=problem_instances['Q']
-        R=problem_instances['R']
+        c=self.prb.c
+        Q=self.prb.Q
+        R=self.prb.R
         cost=sum(sum(c))
         sol_x = np.zeros((dict_data['antennaRow'], dict_data['antennaColumn']))
         sol_q = np.zeros((dict_data['antennaRow'], dict_data['antennaColumn']))
         start = time.time()    
         for sol_iter in range(N_iter):
-            x=problem_instances['x']
-            z=problem_instances['z']
-            q=problem_instances['q']
-            q_NW=problem_instances['q_NW']
-            q_NE=problem_instances['q_NE']
-            q_SW=problem_instances['q_SW']
-            q_SE=problem_instances['q_SE']
-            prob=problem_instances['prob']
+            x=self.prb.x
+            z=self.prb.z
+            q=self.prb.q
+            q_NW=self.prb.q_NW
+            q_NE=self.prb.q_NE
+            q_SW=self.prb.q_SW
+            q_SE=self.prb.q_SE
+            prob=self.prb.prob
             x_sol=np.random.choice([0,1],size=(dict_data['antennaRow'],dict_data['antennaColumn']),p=[1/3,2/3])
             
             for i in range(dict_data['antennaRow']):
                 for j in range(dict_data['antennaColumn']):
                     x[i,j].varValue=x_sol[i,j]
+                    q_SE[i,j].varValue=0
+                    q_SW[i,j].varValue=0
+                    q_NE[i,j].varValue=0
+                    q_NW[i,j].varValue=0
                   
             for m in range(dict_data['antennaRow']-1):
                 for n in range(dict_data['antennaColumn']-1):
                     ant_N=x[m,n].varValue+x[m+1,n].varValue+x[m,n+1].varValue+x[m+1,n+1].varValue
-                    q_SE[m,n].varValue=0
-                    q_SW[m,n+1].varValue=0
-                    q_NE[m+1,n].varValue=0
-                    q_NW[m+1,n+1].varValue=0
+                    
                     for k in range(5):
                         z[m,n,k].varValue=0
                         if k==ant_N:
@@ -73,9 +74,10 @@ class SimpleHeu():
             prob.constraints.update()
             for key in prob.constraints.keys():
                 if not(prob.constraints[key].valid(eps=1e-8)):
-                    print(prob.constraints[key])
+                    # print(prob.constraints[key])
+                    # TODO feaseble soution counter 
                     feasible=False
-                    print('Unfeasible solution')
+                    # print('Unfeasible solution')
                     break
             if feasible:
                 if cost>prob.objective.value():
