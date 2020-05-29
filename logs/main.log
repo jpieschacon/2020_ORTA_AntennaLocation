@@ -1,48 +1,80 @@
-14:32:19 INFO: starting simulation...
-14:32:19 INFO: simulation end
-14:32:19 INFO: getting data from instance...
-14:32:19 INFO: #########
-14:33:21 INFO: starting simulation...
-14:33:21 INFO: simulation end
-14:33:21 INFO: getting data from instance...
-14:33:21 INFO: #########
-14:34:01 INFO: starting simulation...
-14:34:01 INFO: simulation end
-14:34:01 INFO: getting data from instance...
-14:34:01 INFO: #########
-14:35:44 INFO: starting simulation...
-14:35:44 INFO: simulation end
-14:35:44 INFO: getting data from instance...
-14:35:44 INFO: #########
-14:35:59 INFO: starting simulation...
-14:35:59 INFO: simulation end
-14:35:59 INFO: getting data from instance...
-14:35:59 INFO: #########
-15:34:30 INFO: starting simulation...
-15:34:30 INFO: simulation end
-15:34:30 INFO: getting data from instance...
-15:34:30 INFO: #########
-15:39:08 INFO: starting simulation...
-15:39:08 INFO: simulation end
-15:39:08 INFO: getting data from instance...
-15:39:08 INFO: #########
-15:39:34 INFO: starting simulation...
-15:39:34 INFO: simulation end
-15:39:34 INFO: getting data from instance...
-15:39:34 INFO: #########
-15:39:52 INFO: starting simulation...
-15:39:52 INFO: simulation end
-15:39:52 INFO: getting data from instance...
-15:39:52 INFO: #########
-15:40:07 INFO: starting simulation...
-15:40:07 INFO: simulation end
-15:40:07 INFO: getting data from instance...
-15:40:07 INFO: #########
-15:40:30 INFO: starting simulation...
-15:40:30 INFO: simulation end
-15:40:30 INFO: getting data from instance...
-15:40:30 INFO: #########
-15:43:08 INFO: starting simulation...
-15:43:08 INFO: simulation end
-15:43:08 INFO: getting data from instance...
-15:43:08 INFO: #########
+13:42:51 INFO: starting simulation...
+13:42:51 INFO: simulation end
+13:42:51 INFO: getting data from instance...
+13:42:51 INFO: #########
+13:42:51 INFO: 	 Status: Optimal
+13:42:51 INFO: q_(0,_0) 0.0
+13:42:51 INFO: q_(0,_1) 32.0
+13:42:51 INFO: q_(0,_2) 0.0
+13:42:51 INFO: q_(1,_0) 0.0
+13:42:51 INFO: q_(1,_1) 0.0
+13:42:51 INFO: q_(1,_2) 0.0
+13:42:51 INFO: q_(2,_0) 0.0
+13:42:51 INFO: q_(2,_1) 29.0
+13:42:51 INFO: q_(2,_2) 0.0
+13:42:51 INFO: q_NE_(0,_0) 0.0
+13:42:51 INFO: q_NE_(0,_1) 0.0
+13:42:51 INFO: q_NE_(0,_2) 0.0
+13:42:51 INFO: q_NE_(1,_0) 0.0
+13:42:51 INFO: q_NE_(1,_1) 0.0
+13:42:51 INFO: q_NE_(1,_2) 0.0
+13:42:51 INFO: q_NE_(2,_0) 0.0
+13:42:51 INFO: q_NE_(2,_1) 14.0
+13:42:51 INFO: q_NE_(2,_2) 0.0
+13:42:51 INFO: q_NW_(0,_0) 0.0
+13:42:51 INFO: q_NW_(0,_1) 0.0
+13:42:51 INFO: q_NW_(0,_2) 0.0
+13:42:51 INFO: q_NW_(1,_0) 0.0
+13:42:51 INFO: q_NW_(1,_1) 0.0
+13:42:51 INFO: q_NW_(1,_2) 0.0
+13:42:51 INFO: q_NW_(2,_0) 0.0
+13:42:51 INFO: q_NW_(2,_1) 15.0
+13:42:51 INFO: q_NW_(2,_2) 0.0
+13:42:51 INFO: q_SE_(0,_0) 0.0
+13:42:51 INFO: q_SE_(0,_1) 18.0
+13:42:51 INFO: q_SE_(0,_2) 0.0
+13:42:51 INFO: q_SE_(1,_0) 0.0
+13:42:51 INFO: q_SE_(1,_1) 0.0
+13:42:51 INFO: q_SE_(1,_2) 0.0
+13:42:51 INFO: q_SE_(2,_0) 0.0
+13:42:51 INFO: q_SE_(2,_1) 0.0
+13:42:51 INFO: q_SE_(2,_2) 0.0
+13:42:51 INFO: q_SW_(0,_0) 0.0
+13:42:51 INFO: q_SW_(0,_1) 14.0
+13:42:51 INFO: q_SW_(0,_2) 0.0
+13:42:51 INFO: q_SW_(1,_0) 0.0
+13:42:51 INFO: q_SW_(1,_1) 0.0
+13:42:51 INFO: q_SW_(1,_2) 0.0
+13:42:51 INFO: q_SW_(2,_0) 0.0
+13:42:51 INFO: q_SW_(2,_1) 0.0
+13:42:51 INFO: q_SW_(2,_2) 0.0
+13:42:51 INFO: x_(0,_0) 0.0
+13:42:51 INFO: x_(0,_1) 1.0
+13:42:51 INFO: x_(0,_2) 0.0
+13:42:51 INFO: x_(1,_0) 0.0
+13:42:51 INFO: x_(1,_1) 0.0
+13:42:51 INFO: x_(1,_2) 0.0
+13:42:51 INFO: x_(2,_0) 0.0
+13:42:51 INFO: x_(2,_1) 1.0
+13:42:51 INFO: x_(2,_2) 0.0
+13:42:51 INFO: z_(0,_0,_0) 0.0
+13:42:51 INFO: z_(0,_0,_1) 1.0
+13:42:51 INFO: z_(0,_0,_2) 0.0
+13:42:51 INFO: z_(0,_0,_3) 0.0
+13:42:51 INFO: z_(0,_0,_4) 0.0
+13:42:51 INFO: z_(0,_1,_0) 0.0
+13:42:51 INFO: z_(0,_1,_1) 1.0
+13:42:51 INFO: z_(0,_1,_2) 0.0
+13:42:51 INFO: z_(0,_1,_3) 0.0
+13:42:51 INFO: z_(0,_1,_4) 0.0
+13:42:51 INFO: z_(1,_0,_0) 0.0
+13:42:51 INFO: z_(1,_0,_1) 1.0
+13:42:51 INFO: z_(1,_0,_2) 0.0
+13:42:51 INFO: z_(1,_0,_3) 0.0
+13:42:51 INFO: z_(1,_0,_4) 0.0
+13:42:51 INFO: z_(1,_1,_0) 0.0
+13:42:51 INFO: z_(1,_1,_1) 1.0
+13:42:51 INFO: z_(1,_1,_2) 0.0
+13:42:51 INFO: z_(1,_1,_3) 0.0
+13:42:51 INFO: z_(1,_1,_4) 0.0
+13:42:51 INFO: #########

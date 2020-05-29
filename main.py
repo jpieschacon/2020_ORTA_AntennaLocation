@@ -31,19 +31,17 @@ if __name__ == '__main__':
     prb = AntennaLocation(dict_data)
 
     
-    # of_exact, sol_exact, sol_q, comp_time_exact, flagSolver = prb.solve(
-    #     dict_data,
-    #     verbose=True
-    # )
-
-    # grid = Graph(inst, sol_exact, sol_q)
-    # grid.plot()
-    # print(of_exact, comp_time_exact)
-   
-    heu = SimpleHeu(prb)
-    of_heu, sol_heux, sol_heuq, comp_time_heu = heu.solve(
-        dict_data,100000
+    of_exact, sol_exact, sol_q, comp_time_exact, flagSolver = prb.solve(
+        dict_data,
+        verbose=True
     )
+
+    grid = Graph(inst, sol_exact, sol_q)
+    grid.plot()
+    print(of_exact, comp_time_exact)
+   
+    heu = SimpleHeu(prb, dict_data)
+    of_heu, sol_heux, sol_heuq, comp_time_heu = heu.solveRandom(1000)
     
     grid = Graph(inst, sol_heux, sol_heuq)
     grid.plot()
