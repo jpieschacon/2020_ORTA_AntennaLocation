@@ -12,7 +12,7 @@ class SimpleHeu():
         self.dict_data = dict_data
         self.costMax = sum(sum(prb.c))
 
-    def solveRandom(self, N_iter):
+    def solveRandom(self, N_iter=10):
         cost = self.costMax
         start = time.time()
         sol_x = np.ones((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
@@ -27,11 +27,35 @@ class SimpleHeu():
             else:
                 countUnfeasible += 1
                 # TODO implement destroy and rebuild
-
         end = time.time()
         comp_time = end - start
         # print(countFeasible, countUnfeasible)
         return cost, sol_x, sol_q, comp_time
+
+    def solve_N21(self, N_iter=10):
+        cost = self.costMax
+        start = time.time()
+        sol_x = np.ones((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
+        sol_q = np.zeros((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
+        max_ant_number = self.dict_data['antennaRow']*self.dict_data['antennaColumn']
+        countFeasible_N = np.zeros(max_ant_number)
+        countUnfeasible_N = np.zeros(max_ant_number)
+        for quantity_zeros in range(max_ant_number):
+            sol_x_aux = np.ones(self.dict_data['antennaRow'] * self.dict_data[
+                'antennaColumn'])  # Initialize here so that the zeros do not overwrite the ones
+            sol_x_aux[:quantity_zeros] = 0
+            newSol = sol_x_aux.reshape((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
+            for sol_iter in range(N_iter): # Try several times with the same number of zeros (The instance may repeat for small instances)
+                np.random.shuffle(newSol)
+                feasible, opt_sol_x, sol_q, cost = self.validateFeasibility(newSol, sol_x, sol_q, cost)
+                if feasible:
+                    countFeasible_N[quantity_zeros] += 1
+                else:
+                    countUnfeasible_N[quantity_zeros] += 1
+        end = time.time()
+        comp_time = end - start
+        print(countFeasible_N, countUnfeasible_N)
+        return cost, opt_sol_x, sol_q, comp_time
 
     def validateFeasibility(self, newSol, sol_x, sol_q, cost):
         c = self.prb.c

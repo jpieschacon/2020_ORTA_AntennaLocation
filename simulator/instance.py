@@ -26,12 +26,6 @@ class Instance():
             sim_setting['antenna_row'] * sim_setting['antenna_column']
         ))
         self.C = np.reshape(self.C, [(sim_setting['antenna_row']), (sim_setting['antenna_column'])])
-        # self.profits = np.around(np.random.uniform(
-        #     sim_setting['low_profit'],
-        #     sim_setting['high_profit'],
-        #     sim_setting['n_items']
-        # ))
-        # self.n_items = sim_setting['n_items']
         logging.info("simulation end")
 
     def get_data(self):
