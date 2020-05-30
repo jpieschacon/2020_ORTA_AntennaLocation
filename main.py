@@ -42,34 +42,43 @@ if __name__ == '__main__':
     print(of_exact, comp_time_exact)
    
     heu = SimpleHeu(prb, dict_data)
-    of_heu, sol_heux, sol_heuq, comp_time_heu = heu.solveRandom(1000)
+    # of_heu, sol_heux, sol_heuq, comp_time_heu = heu.solveRandom(1000)
 
-    grid = Graph(inst, sol_heux, sol_heuq)
-    grid.plot()
-    print('Random heuristic:')
-    print(of_heu, comp_time_heu)
+    # grid = Graph(inst, sol_heux, sol_heuq)
+    # grid.plot()
+    # print('Random heuristic:')
+    # print(of_heu, comp_time_heu)
 
-    of_heu, sol_heux, sol_heuq, comp_time_heu = heu.solveRandomPDF(1000)
+    of_heu, sol_heux, sol_heuq, comp_time_heu = heu.solveRandomPDF(3000)
 
     grid = Graph(inst, sol_heux, sol_heuq)
     grid.plot()
     print('Random PDF heuristic:')
     print(of_heu, comp_time_heu)
-
-    # From max number of antennas to 1 antenna heuristic
-    of_heu1, sol_heux1, sol_heuq1, comp_time_heu1, uninstalled_ant = heu.solve_N21(1000)
-
-    grid = Graph(inst, sol_heux1, sol_heuq1)
-    grid.plot()
-    print('Random N-to-1 heuristic:')
-    print(of_heu1, comp_time_heu1, uninstalled_ant)
     
-    of_heu2, sol_heux2, sol_heuq2, comp_time_heu2 = heu.solve_12N(1000)
+    # Only demand
+    
+    of_heu, sol_heux, sol_heuq, comp_time_heu = heu.solveRandomBIC(3000)
 
-    grid = Graph(inst, sol_heux2, sol_heuq2)
+    grid = Graph(inst, sol_heux, sol_heuq)
     grid.plot()
-    print('Random 1-to-N heuristic:')
-    print(of_heu2, comp_time_heu2)
+    print('Random BIC heuristic:')
+    print(of_heu, comp_time_heu)
+
+    # # From max number of antennas to 1 antenna heuristic
+    # of_heu1, sol_heux1, sol_heuq1, comp_time_heu1, uninstalled_ant = heu.solve_N21(1000)
+
+    # grid = Graph(inst, sol_heux1, sol_heuq1)
+    # grid.plot()
+    # print('Random N-to-1 heuristic:')
+    # print(of_heu1, comp_time_heu1, uninstalled_ant)
+    
+    # of_heu2, sol_heux2, sol_heuq2, comp_time_heu2 = heu.solve_12N(1000)
+
+    # grid = Graph(inst, sol_heux2, sol_heuq2)
+    # grid.plot()
+    # print('Random 1-to-N heuristic:')
+    # print(of_heu2, comp_time_heu2)
     
     # print(of_heu, sol_heu, comp_time_heu)
 
