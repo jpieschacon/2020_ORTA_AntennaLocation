@@ -12,6 +12,46 @@ class SimpleHeu():
         self.dict_data = dict_data
         self.costMax = sum(sum(prb.c))
 
+    def solve(self, N_iter, method='random'):
+        cost = self.costMax
+        start = time.time()
+        sol_x = np.ones((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
+        sol_q = np.zeros((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
+        param1 = None
+        if method == 'PDF':
+            totalProbability = self.defineProbabilities()  # generate probability for each antenna
+            param1 = totalProbability
+        countFeasible = 0
+        countUnfeasible = 0
+        for sol_iter in range(N_iter):
+            newSol = self.newSol(method, param1)
+            feasible, sol_x, sol_q, cost = self.validateFeasibility(newSol, sol_x, sol_q, cost)
+            if feasible:
+                countFeasible += 1
+            else:
+                countUnfeasible += 1
+                # TODO implement destroy and rebuild
+
+        end = time.time()
+        comp_time = end - start
+        # print(countFeasible, countUnfeasible)
+        return cost, sol_x, sol_q, comp_time
+
+    def newSol(self, method, param1):
+        if method == 'random':
+            newSol = np.random.choice([0, 1], size=(self.dict_data['antennaRow'], self.dict_data['antennaColumn']), p=[1 / 3, 2 / 3])
+        elif method == 'PDF':
+            newSol = np.zeros((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
+            for i in range(self.dict_data['antennaRow']):
+                for j in range(self.dict_data['antennaColumn']):
+                    newSol[i, j] = np.random.choice([0, 1], p=[1-param1[i, j], param1[i, j]])
+        elif method == '12N':
+            pass
+        else:
+            newSol = np.ones((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
+        return newSol
+
+
     def defineProbabilities(self):
         R0 = np.zeros((self.dict_data['antennaRow'] + 1, self.dict_data['antennaColumn'] + 1))  # Demand matrix, zeros in borders
         R0[1:self.dict_data['antennaRow'], 1:self.dict_data['antennaColumn']] = self.prb.R  # R in the center
