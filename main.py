@@ -64,12 +64,12 @@ if __name__ == '__main__':
     print('Random N-to-1 heuristic:')
     print(of_heu1, comp_time_heu1, uninstalled_ant)
     
-    of_heu2, sol_heux2, sol_heuq2, comp_time_heu2 = heu.solve_12N(1000)
+    of_heu2, sol_heux2, sol_heuq2, comp_time_heu2, min_ant_num = heu.solve_12N(1000)
 
     grid = Graph(inst, sol_heux2, sol_heuq2)
     grid.plot()
     print('Random 1-to-N heuristic:')
-    print(of_heu2, comp_time_heu2)
+    print(of_heu2, comp_time_heu2, min_ant_num)
     
     # print(of_heu, sol_heu, comp_time_heu)
 

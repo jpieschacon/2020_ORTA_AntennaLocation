@@ -119,24 +119,26 @@ class SimpleHeu():
         start = time.time()
         sol_x = np.ones((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
         sol_q = np.zeros((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
-        countFeasible = 0
-        countUnfeasible = 0
         max_ant_number = self.dict_data['antennaRow']*self.dict_data['antennaColumn']
-        for ant_number in range(max_ant_number):
+        countFeasible_N = np.zeros(max_ant_number)
+        countUnfeasible_N = np.zeros(max_ant_number)
+        for ant_number in range(1,max_ant_number):
             sol_x_aux = np.zeros(self.dict_data['antennaRow'] * self.dict_data['antennaColumn'])
             random_ant=np.random.randint(self.dict_data['antennaRow'] * self.dict_data['antennaColumn'], size=ant_number)
             sol_x_aux[random_ant]=1
             newSol = sol_x_aux.reshape((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
-            feasible, sol_x, sol_q, cost = self.validateFeasibility(newSol, sol_x, sol_q, cost)
-            if feasible:
-                countFeasible += 1
-            else:
-                countUnfeasible += 1
-                # TODO implement destroy and rebuild
+            for sol_iter in range(N_iter):
+                feasible, opt_sol_x, sol_q, cost = self.validateFeasibility(newSol, sol_x, sol_q, cost)
+                np.random.shuffle(newSol)
+                if feasible:
+                    countFeasible_N[ant_number-1] += 1
+                else:
+                    countUnfeasible_N[ant_number-1] += 1
+            if countFeasible_N[ant_number-1] == 0 and countUnfeasible_N[ant_number-1] == N_iter and not(countFeasible_N.any()==1):
+                min_ant_number = ant_number+1
         end = time.time()
         comp_time = end - start
-        # print(countFeasible, countUnfeasible)
-        return cost, sol_x, sol_q, comp_time
+        return cost, sol_x, sol_q, comp_time, min_ant_number
 
     def validateFeasibility(self, newSol, sol_x, sol_q, cost):
         c = self.prb.c
