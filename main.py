@@ -42,7 +42,13 @@ if __name__ == '__main__':
    
     heu = SimpleHeu(prb, dict_data)
     of_heu, sol_heux, sol_heuq, comp_time_heu = heu.solveRandom(1000)
-    
+
+    grid = Graph(inst, sol_heux, sol_heuq)
+    grid.plot()
+    print(of_heu, comp_time_heu)
+
+    of_heu, sol_heux, sol_heuq, comp_time_heu = heu.solveRandomPDF(1000)
+
     grid = Graph(inst, sol_heux, sol_heuq)
     grid.plot()
     print(of_heu, comp_time_heu)
