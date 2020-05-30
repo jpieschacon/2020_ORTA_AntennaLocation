@@ -2,6 +2,7 @@
 import time
 import math
 import logging
+import random
 import numpy as np
 from pulp import *
 
@@ -112,6 +113,30 @@ class SimpleHeu():
         comp_time = end - start
         print(countFeasible_N, countUnfeasible_N)
         return cost, opt_sol_x, sol_q, comp_time, uninstalled_ant
+    
+    def solve_12N(self, N_iter):
+        cost = self.costMax
+        start = time.time()
+        sol_x = np.ones((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
+        sol_q = np.zeros((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
+        countFeasible = 0
+        countUnfeasible = 0
+        max_ant_number = self.dict_data['antennaRow']*self.dict_data['antennaColumn']
+        for ant_number in range(max_ant_number):
+            sol_x_aux = np.zeros(self.dict_data['antennaRow'] * self.dict_data['antennaColumn'])
+            random_ant=np.random.randint(self.dict_data['antennaRow'] * self.dict_data['antennaColumn'], size=ant_number)
+            sol_x_aux[random_ant]=1
+            newSol = sol_x_aux.reshape((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
+            feasible, sol_x, sol_q, cost = self.validateFeasibility(newSol, sol_x, sol_q, cost)
+            if feasible:
+                countFeasible += 1
+            else:
+                countUnfeasible += 1
+                # TODO implement destroy and rebuild
+        end = time.time()
+        comp_time = end - start
+        # print(countFeasible, countUnfeasible)
+        return cost, sol_x, sol_q, comp_time
 
     def validateFeasibility(self, newSol, sol_x, sol_q, cost):
         c = self.prb.c
