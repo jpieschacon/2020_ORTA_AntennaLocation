@@ -48,11 +48,11 @@ if __name__ == '__main__':
     print(of_heu, comp_time_heu)
 
     # From max number of antennas to 1 antenna heuristic
-    of_heu1, sol_heux1, sol_heuq1, comp_time_heu1 = heu.solve_N21(1000)
+    of_heu1, sol_heux1, sol_heuq1, comp_time_heu1, uninstalled_ant = heu.solve_N21(1000)
 
     grid = Graph(inst, sol_heux1, sol_heuq1)
     grid.plot()
-    print(of_heu1, comp_time_heu1)
+    print(of_heu1, comp_time_heu1, uninstalled_ant)
     
     # print(of_heu, sol_heu, comp_time_heu)
 

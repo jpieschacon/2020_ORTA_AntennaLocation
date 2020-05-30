@@ -53,6 +53,7 @@ class SimpleHeu():
                 else:
                     countUnfeasible_N[quantity_zeros] += 1
             if countFeasible_N[quantity_zeros] == 0 and countUnfeasible_N[quantity_zeros] == N_iter:
+                uninstalled_ant = quantity_zeros-1
                 # There are no more feasible solutions for lesser amount of installed antennas
                 # (Valid only if the number of iterations N_iter is much bigger than the instance
                 # this way we are checking every combination of non installed antennas (if instance not repeated))
@@ -60,7 +61,7 @@ class SimpleHeu():
         end = time.time()
         comp_time = end - start
         print(countFeasible_N, countUnfeasible_N)
-        return cost, opt_sol_x, sol_q, comp_time
+        return cost, opt_sol_x, sol_q, comp_time, uninstalled_ant
 
     def validateFeasibility(self, newSol, sol_x, sol_q, cost):
         c = self.prb.c
