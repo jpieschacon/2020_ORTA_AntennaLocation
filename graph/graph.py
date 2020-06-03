@@ -15,7 +15,7 @@ class Graph():
         self.solution = solution
         self.sol_q = sol_q
 
-    def plot(self):
+    def plot(self,title):
 
         G = nx.grid_2d_graph(self.instance.ar, self.instance.ac)  # 4x4 grid
 
@@ -51,5 +51,6 @@ class Graph():
         labeledge = nx.get_edge_attributes(G, 'label')
         nx.draw_networkx(G, my_pos, font_size=8, node_color=color, labels=labels)
         nx.draw_networkx_edge_labels(G, my_pos, edge_labels=labeledge)
-
+        plt.title(title)
+        print(title+':')
         plt.show()

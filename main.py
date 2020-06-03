@@ -30,55 +30,52 @@ if __name__ == '__main__':
 
     prb = AntennaLocation(dict_data)
 
-    
+    # Solver
     of_exact, sol_exact, sol_q, comp_time_exact, flagSolver = prb.solve(
         dict_data,
         verbose=True
     )
 
     grid = Graph(inst, sol_exact, sol_q)
-    grid.plot()
-    print('Solver:')
+    grid.plot('Solver')
     print(of_exact, comp_time_exact)
    
     heu = SimpleHeu(prb, dict_data)
-    # of_heu, sol_heux, sol_heuq, comp_time_heu = heu.solveRandom(1000)
-
-    # grid = Graph(inst, sol_heux, sol_heuq)
-    # grid.plot()
-    # print('Random heuristic:')
-    # print(of_heu, comp_time_heu)
-
-    of_heu, sol_heux, sol_heuq, comp_time_heu = heu.solveRandomPDF(3000)
+    
+    # Ramdom
+    of_heu, sol_heux, sol_heuq, comp_time_heu = heu.solveRandom(1000)
 
     grid = Graph(inst, sol_heux, sol_heuq)
-    grid.plot()
-    print('Random PDF heuristic:')
+    grid.plot('Random heuristic')
     print(of_heu, comp_time_heu)
-    
-    # Only demand
-    
-    of_heu, sol_heux, sol_heuq, comp_time_heu = heu.solveRandomBIC(3000)
+
+    # PDF
+    of_heu, sol_heux, sol_heuq, comp_time_heu = heu.solveRandomPDF(3000,1)
 
     grid = Graph(inst, sol_heux, sol_heuq)
-    grid.plot()
-    print('Random BIC heuristic:')
+    grid.plot('Random PDF heuristic')
     print(of_heu, comp_time_heu)
-
-    # # From max number of antennas to 1 antenna heuristic
-    # of_heu1, sol_heux1, sol_heuq1, comp_time_heu1, uninstalled_ant = heu.solve_N21(1000)
-
-    # grid = Graph(inst, sol_heux1, sol_heuq1)
-    # grid.plot()
-    # print('Random N-to-1 heuristic:')
-    # print(of_heu1, comp_time_heu1, uninstalled_ant)
     
-    # of_heu2, sol_heux2, sol_heuq2, comp_time_heu2 = heu.solve_12N(1000)
+    # Beginning in the center
+    of_heu, sol_heux, sol_heuq, comp_time_heu = heu.solveRandomPDF(3000,2)
 
-    # grid = Graph(inst, sol_heux2, sol_heuq2)
-    # grid.plot()
-    # print('Random 1-to-N heuristic:')
-    # print(of_heu2, comp_time_heu2)
+    grid = Graph(inst, sol_heux, sol_heuq)
+    grid.plot('Random BIC heuristic')
+    print(of_heu, comp_time_heu)
+    
+    # From max number of antennas to 1 antenna heuristic
+    of_heu1, sol_heux1, sol_heuq1, comp_time_heu1, uninstalled_ant = heu.solve_N21(1000)
+
+    grid = Graph(inst, sol_heux1, sol_heuq1)
+    grid.plot('Random N-to-1 heuristic')
+    print(of_heu1, comp_time_heu1, uninstalled_ant)
+    
+    # From 1 antenna  to max number of antennas
+    of_heu2, sol_heux2, sol_heuq2, comp_time_heu2 = heu.solve_12N(1000)
+
+    grid = Graph(inst, sol_heux2, sol_heuq2)
+    grid.plot('Random 1-to-N heuristic')
+    print(of_heu2, comp_time_heu2)
     
     # print(of_heu, sol_heu, comp_time_heu)
 
