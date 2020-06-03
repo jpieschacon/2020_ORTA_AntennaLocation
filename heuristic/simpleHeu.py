@@ -62,51 +62,6 @@ class SimpleHeu():
         comp_time = end - start
         # print(countFeasible, countUnfeasible)
         return cost, sol_x, sol_q, comp_time
-    
-    # def defineProbabilitiesDemand(self):
-    #     R0 = np.zeros((self.dict_data['antennaRow'] + 1, self.dict_data['antennaColumn'] + 1))  # Demand matrix, zeros in borders
-    #     R0[1:self.dict_data['antennaRow'], 1:self.dict_data['antennaColumn']] = self.prb.R  # R in the center
-
-    #     cost0 = np.zeros((self.dict_data['antennaRow'] + 2, self.dict_data['antennaColumn'] + 2))  # Cost matrix, zeros in borders
-    #     cost0[1:self.dict_data['antennaRow'] + 1, 1:self.dict_data['antennaColumn'] + 1] = self.prb.c
-
-    #     probabilityDemand = np.zeros((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
-    #     # probabilityCostSquare = np.zeros((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
-    #     for i in range(self.dict_data['antennaRow']):
-    #         for j in range(self.dict_data['antennaColumn']):
-    #             probabilityDemand[i, j] = sum(sum(R0[i:i + 2, j:j + 2]))  # sum 4 nearest demands
-    #     probabilityDemand = probabilityDemand / np.max(probabilityDemand)  # normalize probabilities
-    #     probabilityCost = 1 - self.prb.c / np.max(self.prb.c)  # assign probability 0 to most expensive antenna
-    #     #probabilityCost = 1 - np.max(probabilityCost) + probabilityCost  # sum the difference to avoid 0 probability
-    #     totalProbability = probabilityDemand*probabilityCost
-    #     return totalProbability
-
-    # def solveRandomBIC(self, N_iter):
-    #         cost = self.costMax
-    #         start = time.time()
-    #         sol_x = np.ones((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
-    #         sol_q = np.zeros((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
-    #         countFeasible = 0
-    #         countUnfeasible = 0
-    #         totalProbability = self.defineProbabilitiesDemand()  # generate probability for each antenna
-    #         for sol_iter in range(N_iter):
-    #             newSol = np.zeros((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
-    #             for i in range(self.dict_data['antennaRow']):
-    #                 for j in range(self.dict_data['antennaColumn']):
-    #                     newSol[i, j] = np.random.choice([0, 1], p=[1-totalProbability[i, j], totalProbability[i, j]])
-    #             feasible, sol_x, sol_q, cost = self.validateFeasibility(newSol, sol_x, sol_q, cost)
-    #             if feasible:
-    #                 countFeasible += 1
-    #             else:
-    #                 countUnfeasible += 1
-    #                 # TODO implement destroy and rebuild
-    
-    #         end = time.time()
-    #         comp_time = end - start
-    #         # print(countFeasible, countUnfeasible)
-    #         return cost, sol_x, sol_q, comp_time
-
-
 
     def solveRandom(self, N_iter):
         cost = self.costMax
