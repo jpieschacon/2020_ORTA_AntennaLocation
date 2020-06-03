@@ -13,7 +13,7 @@ class SimpleHeu():
         self.dict_data = dict_data
         self.costMax = sum(sum(prb.c))
 
-    def defineProbabilities(self,prob_type):
+    def defineProbabilities(self, prob_type):
         R0 = np.zeros((self.dict_data['antennaRow'] + 1, self.dict_data['antennaColumn'] + 1))  # Demand matrix, zeros in borders
         R0[1:self.dict_data['antennaRow'], 1:self.dict_data['antennaColumn']] = self.prb.R  # R in the center
 
@@ -28,7 +28,7 @@ class SimpleHeu():
                 probabilityCostSquare[i, j] = sum(sum(cost0[i:i + 3, j:j + 3])) - self.prb.c[i, j]  # sum costs for antennas around antenna i,j
         probabilityDemand = probabilityDemand / np.max(probabilityDemand)  # normalize probabilities
         probabilityCost = 1 - self.prb.c / np.max(self.prb.c)  # assign probability 0 to most expensive antenna
-        if prob_type == 1:   
+        if prob_type == 1:
             probabilityCost = 1 - np.max(probabilityCost) + probabilityCost  # sum the difference to avoid 0 probability
             probabilityCostSquare = 1 - probabilityCostSquare / np.max(probabilityCostSquare)
             probabilityCostSquare = 1 - np.max(probabilityCostSquare) + probabilityCostSquare  # sum the difference to avoid 0 probability
@@ -38,7 +38,7 @@ class SimpleHeu():
             totalProbability = probabilityDemand * probabilityCost
         return totalProbability
 
-    def solveRandomPDF(self, N_iter,prob_type):
+    def solveRandomPDF(self, N_iter, prob_type):
         cost = self.costMax
         start = time.time()
         sol_x = np.ones((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
@@ -50,7 +50,7 @@ class SimpleHeu():
             newSol = np.zeros((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
             for i in range(self.dict_data['antennaRow']):
                 for j in range(self.dict_data['antennaColumn']):
-                    newSol[i, j] = np.random.choice([0, 1], p=[1-totalProbability[i, j], totalProbability[i, j]])
+                    newSol[i, j] = np.random.choice([0, 1], p=[1 - totalProbability[i, j], totalProbability[i, j]])
             feasible, sol_x, sol_q, cost = self.validateFeasibility(newSol, sol_x, sol_q, cost)
             if feasible:
                 countFeasible += 1
@@ -88,7 +88,7 @@ class SimpleHeu():
         start = time.time()
         sol_x = np.ones((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
         sol_q = np.zeros((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
-        max_ant_number = self.dict_data['antennaRow']*self.dict_data['antennaColumn']
+        max_ant_number = self.dict_data['antennaRow'] * self.dict_data['antennaColumn']
         countFeasible_N = np.zeros(max_ant_number)
         countUnfeasible_N = np.zeros(max_ant_number)
         for quantity_zeros in range(max_ant_number):
@@ -96,7 +96,7 @@ class SimpleHeu():
                 'antennaColumn'])  # Initialize here so that the zeros do not overwrite the ones
             sol_x_aux[:quantity_zeros] = 0
             newSol = sol_x_aux.reshape((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
-            for sol_iter in range(N_iter): # Try several times with the same number of zeros (The instance may repeat for small instances)
+            for sol_iter in range(N_iter):  # Try several times with the same number of zeros (The instance may repeat for small instances)
                 np.random.shuffle(newSol)
                 feasible, opt_sol_x, sol_q, cost = self.validateFeasibility(newSol, sol_x, sol_q, cost)
                 if feasible:
@@ -104,7 +104,7 @@ class SimpleHeu():
                 else:
                     countUnfeasible_N[quantity_zeros] += 1
             if countFeasible_N[quantity_zeros] == 0 and countUnfeasible_N[quantity_zeros] == N_iter:
-                uninstalled_ant = quantity_zeros-1
+                uninstalled_ant = quantity_zeros - 1
                 # There are no more feasible solutions for lesser amount of installed antennas
                 # (Valid only if the number of iterations N_iter is much bigger than the instance
                 # this way we are checking every combination of non installed antennas (if instance not repeated))
