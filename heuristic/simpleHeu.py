@@ -119,7 +119,7 @@ class SimpleHeu:
                 break
         end = time.time()
         comp_time = end - start
-        print(countFeasible_N, countUnfeasible_N)
+        # print(countFeasible_N, countUnfeasible_N)
         return cost, opt_sol_x, sol_q, comp_time, uninstalled_ant
 
     def solve_12N(self, N_iter):
@@ -130,6 +130,7 @@ class SimpleHeu:
         max_ant_number = self.dict_data['antennaRow'] * self.dict_data['antennaColumn']
         countFeasible_N = np.zeros(max_ant_number)
         countUnfeasible_N = np.zeros(max_ant_number)
+        min_ant_number = 1
         for ant_number in range(1, max_ant_number):
             sol_x_aux = np.zeros(self.dict_data['antennaRow'] * self.dict_data['antennaColumn'])
             random_ant = np.random.randint(self.dict_data['antennaRow'] * self.dict_data['antennaColumn'], size=ant_number)

@@ -12,11 +12,7 @@ from graph.graph import Graph
 # TODO change demand distribution
 # TODO change cost distribution
 # TODO execute using different seeds
-# PARAMS:
-# seed
-# nRow
-# nCol
-#
+
 seed = 0
 np.random.seed(seed)
 
