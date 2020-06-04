@@ -8,7 +8,6 @@ from solver.antennaLocation import AntennaLocation
 from heuristic.simpleHeu import SimpleHeu
 from graph.graph import Graph
 
-# TODO add destroyAndRebuild
 # TODO change capacity distribution, add min capacity and modify instance.py
 # TODO change demand distribution
 # TODO change cost distribution
@@ -18,8 +17,8 @@ from graph.graph import Graph
 # nRow
 # nCol
 #
-
-np.random.seed(0)
+seed = 0
+np.random.seed(seed)
 
 if __name__ == '__main__':
     log_name = "./logs/main.log"
@@ -49,54 +48,49 @@ if __name__ == '__main__':
     print(of_exact, comp_time_exact)
 
     heu = SimpleHeu(prb, dict_data)
+    iter_number = 1000
 
     # Ramdom
-    of_heu, sol_heux, sol_heuq, comp_time_heu = heu.solveRandom(1000)
+    of_heu_random, sol_heux, sol_heuq, comp_time_heu_random = heu.solveRandom(iter_number)
 
     grid = Graph(inst, sol_heux, sol_heuq)
     grid.plot('Random heuristic')
-    print(of_heu, comp_time_heu)
+    print(of_heu_random, comp_time_heu_random)
 
     # PDF
-    of_heu, sol_heux, sol_heuq, comp_time_heu = heu.solveRandomPDF(3000, 1)
+    of_heu_pdf, sol_heux, sol_heuq, comp_time_heu_pdf = heu.solveRandomPDF(iter_number, 1)
 
     grid = Graph(inst, sol_heux, sol_heuq)
     grid.plot('Random PDF heuristic')
-    print(of_heu, comp_time_heu)
+    print(of_heu_pdf, comp_time_heu_pdf)
 
     # Beginning in the center
-    of_heu, sol_heux, sol_heuq, comp_time_heu = heu.solveRandomPDF(3000, 2)
+    of_heu_bic, sol_heux, sol_heuq, comp_time_heu_bic = heu.solveRandomPDF(iter_number, 2)
 
     grid = Graph(inst, sol_heux, sol_heuq)
     grid.plot('Random BIC heuristic')
-    print(of_heu, comp_time_heu)
+    print(of_heu_bic, comp_time_heu_bic)
 
     # From max number of antennas to 1 antenna heuristic
-    of_heu1, sol_heux1, sol_heuq1, comp_time_heu1, uninstalled_ant = heu.solve_N21(1000)
+    of_heu_N21, sol_heux1, sol_heuq1, comp_time_heu_N21, uninstalled_ant = heu.solve_N21(iter_number)
 
     grid = Graph(inst, sol_heux1, sol_heuq1)
     grid.plot('Random N-to-1 heuristic')
-    print(of_heu1, comp_time_heu1, uninstalled_ant)
+    print(of_heu_N21, comp_time_heu_N21, uninstalled_ant)
 
     # From 1 antenna  to max number of antennas
-    of_heu2, sol_heux2, sol_heuq2, comp_time_heu2, min_ant_num = heu.solve_12N(1000)
+    of_heu_12N, sol_heux2, sol_heuq2, comp_time_heu_12N, min_ant_num = heu.solve_12N(iter_number)
 
     grid = Graph(inst, sol_heux2, sol_heuq2)
     grid.plot('Random 1-to-N heuristic')
-    print(of_heu2, comp_time_heu2, min_ant_num)
+    print(of_heu_12N, comp_time_heu_12N, min_ant_num)
 
-    # print(of_heu, sol_heu, comp_time_heu)
-
-    # # printing results of a file
-    # file_output = open(
-    #     "./results/exp_general_table.csv",
-    #     "w"
-    # )
-    # file_output.write("method, of, sol, time\n")
-    # file_output.write("{}, {}, {}, {}\n".format(
-    #     "heu", of_heu, sol_heu, comp_time_heu
-    # ))
-    # file_output.write("{}, {}, {}, {}\n".format(
-    #     "exact", of_exact, sol_exact, comp_time_exact
-    # ))
-    # file_output.close()
+    # printing results of a file
+    file_output = open("./results/exp_general_table.csv", "a")
+    file_output.write(f"{seed},{sim_setting['antenna_row']},{sim_setting['antenna_column']},{'solver'},{-1},{comp_time_exact},{of_exact}\n")
+    file_output.write(f"{seed},{sim_setting['antenna_row']},{sim_setting['antenna_column']},{'random'},{iter_number},{comp_time_heu_random},{of_heu_random}\n")
+    file_output.write(f"{seed},{sim_setting['antenna_row']},{sim_setting['antenna_column']},{'PDF'},{iter_number},{comp_time_heu_pdf},{of_heu_pdf}\n")
+    file_output.write(f"{seed},{sim_setting['antenna_row']},{sim_setting['antenna_column']},{'BIC'},{iter_number},{comp_time_heu_bic},{of_heu_bic}\n")
+    file_output.write(f"{seed},{sim_setting['antenna_row']},{sim_setting['antenna_column']},{'N21'},{iter_number},{comp_time_heu_N21},{of_heu_N21}\n")
+    file_output.write(f"{seed},{sim_setting['antenna_row']},{sim_setting['antenna_column']},{'12N'},{iter_number},{comp_time_heu_12N},{of_heu_12N}\n")
+    file_output.close()
