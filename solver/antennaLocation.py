@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import time
-import logging
 import numpy as np
 from pulp import *
 import re
 
 
-class AntennaLocation():
-    def __init__(self,dict_data):
+class AntennaLocation:
+    def __init__(self, dict_data):
         logging.info("#########")
         # items = range(dict_data['n_items'])
 
@@ -65,10 +64,10 @@ class AntennaLocation():
                 self.prob += lpSum(self.z[m, n, k] for k in range(5)) == 1, f"2_{m}_{n}"
                 self.prob += 4 - lpSum([self.x[i, j]] for i in [m, m + 1] for j in [n, n + 1]) == lpSum([(4 - k) * self.z[m, n, k] for k in range(5)]), f"3_{m}_{n}"
                 for k in range(5):
-                    self.prob += self.q_SE[m, n] * k - self.R[m, n] * self.x[m, n] <= (1 - self.z[m, n, k]) * self.Q[m, n]*100, f"4_{m}_{n}_{k}"
-                    self.prob += self.q_SW[m, n + 1] * k - self.R[m, n] * self.x[m, n + 1] <= (1 - self.z[m, n, k]) * self.Q[m, n + 1]*100, f"5_{m}_{n}_{k}"
-                    self.prob += self.q_NE[m + 1, n] * k - self.R[m, n] * self.x[m + 1, n] <= (1 - self.z[m, n, k]) * self.Q[m + 1, n]*100, f"6_{m}_{n}_{k}"
-                    self.prob += self.q_NW[m + 1, n + 1] * k - self.R[m, n] * self.x[m + 1, n + 1] <= (1 - self.z[m, n, k]) * self.Q[m + 1, n + 1]*100, f"7_{m}_{n}_{k}"
+                    self.prob += self.q_SE[m, n] * k - self.R[m, n] * self.x[m, n] <= (1 - self.z[m, n, k]) * self.Q[m, n] * 100, f"4_{m}_{n}_{k}"
+                    self.prob += self.q_SW[m, n + 1] * k - self.R[m, n] * self.x[m, n + 1] <= (1 - self.z[m, n, k]) * self.Q[m, n + 1] * 100, f"5_{m}_{n}_{k}"
+                    self.prob += self.q_NE[m + 1, n] * k - self.R[m, n] * self.x[m + 1, n] <= (1 - self.z[m, n, k]) * self.Q[m + 1, n] * 100, f"6_{m}_{n}_{k}"
+                    self.prob += self.q_NW[m + 1, n + 1] * k - self.R[m, n] * self.x[m + 1, n + 1] <= (1 - self.z[m, n, k]) * self.Q[m + 1, n + 1] * 100, f"7_{m}_{n}_{k}"
                 self.prob += self.q_SE[m, n] + self.q_SW[m, n + 1] + self.q_NE[m + 1, n] + self.q_NW[m + 1, n + 1] == self.R[m, n], f"8_{m}_{n}"  # lina
         for i in range(dict_data['antennaRow']):
             for j in range(dict_data['antennaColumn']):
@@ -76,8 +75,6 @@ class AntennaLocation():
                 self.prob += self.q[i, j] <= self.Q[i, j] * self.x[i, j], f"10_{i}_{j}"
 
         self.prob.writeLP("./logs/{}.lp".format(self.problem_name))
-        
-        
 
     def solve(
             self, dict_data, time_limit=None,
@@ -96,7 +93,7 @@ class AntennaLocation():
         Returns:
             [type] -- [description]
         """
-        
+
         msg_val = 1 if verbose else 0
         start = time.time()
         solver = COIN_CMD(
@@ -121,7 +118,7 @@ class AntennaLocation():
             for var in sol:
                 logging.info("{} {}".format(var.name, var.varValue))
                 # if var.varValue != 0:
-                    # print(var.name, "\t", var.varValue)
+                # print(var.name, "\t", var.varValue)
                 if "x_" in var.name:
                     index = re.findall(r'\d+', var.name.replace('x_', ''))
                     sol_x[int(index[0]), int(index[1])] = var.varValue
@@ -131,5 +128,5 @@ class AntennaLocation():
             # logging.info("\n\tof: {}\n\tsol:\n{} \n\ttime:{}".format(of, sol_x, comp_time))
             logging.info("#########")
         else:
-            print("Infeasible solution")
+            print("Unfeasible solution")
         return of, sol_x, sol_q, comp_time, flagSolver

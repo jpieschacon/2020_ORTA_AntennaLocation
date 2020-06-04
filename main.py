@@ -12,6 +12,12 @@ from graph.graph import Graph
 # TODO change capacity distribution, add min capacity and modify instance.py
 # TODO change demand distribution
 # TODO change cost distribution
+# TODO execute using different seeds
+# PARAMS:
+# seed
+# nRow
+# nCol
+#
 
 np.random.seed(0)
 
@@ -36,7 +42,7 @@ if __name__ == '__main__':
     prb = AntennaLocation(dict_data)
 
     # Solver
-    of_exact, sol_exact, sol_q, comp_time_exact, flagSolver = prb.solve(dict_data, verbose=True)
+    of_exact, sol_exact, sol_q, comp_time_exact, flagSolver = prb.solve(dict_data, verbose=True, time_limit=30*60)
 
     grid = Graph(inst, sol_exact, sol_q)
     grid.plot('Solver')

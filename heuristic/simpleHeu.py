@@ -1,19 +1,14 @@
 # -*- coding: utf-8 -*-
 import time
-import math
-import logging
-import random
 import numpy as np
-from pulp import *
-from copy import  deepcopy
+from copy import deepcopy
 
 
-class SimpleHeu():
+class SimpleHeu:
     def __init__(self, prb, dict_data):
         self.prb = prb
         self.dict_data = dict_data
         self.costMax = sum(sum(prb.c))
-        # self.prb.R.flags.writeable = False
 
     def defineProbabilities(self, prob_type):
         R0 = np.zeros((self.dict_data['antennaRow'] + 1, self.dict_data['antennaColumn'] + 1))  # Demand matrix, zeros in borders
@@ -38,6 +33,8 @@ class SimpleHeu():
             totalProbability = np.interp(totalProbability, [np.min(totalProbability), np.max(totalProbability)], [0.2, 0.8])
         elif prob_type == 2:
             totalProbability = probabilityDemand * probabilityCost
+        else:
+            totalProbability = 0
         return totalProbability
 
     def solveRandomPDF(self, N_iter, prob_type):
@@ -60,9 +57,9 @@ class SimpleHeu():
                 countFeasible += 1
             else:
                 countUnfeasible += 1
-                # feasible, sol_x, sol_q, cost, constraint, nF, nU = self.destroyAndRebuild(newSol, sol_x, sol_q, cost, constraint)
-                # feasibleDaR += nF
-                # unfeasibleDaR += nU
+                feasible, sol_x, sol_q, cost, constraint, nF, nU = self.destroyAndRebuild(newSol, sol_x, sol_q, cost, constraint)
+                feasibleDaR += nF
+                unfeasibleDaR += nU
 
         end = time.time()
         comp_time = end - start
@@ -81,8 +78,6 @@ class SimpleHeu():
         for sol_iter in range(N_iter):
             newSol = np.random.choice([0, 1], size=(self.dict_data['antennaRow'], self.dict_data['antennaColumn']), p=[1 / 3, 2 / 3])
             feasible, sol_x, sol_q, cost, constraint = self.validateFeasibility(newSol, sol_x, sol_q, cost)
-            if sol_iter == 77:
-                pass
             if feasible:
                 countFeasible += 1
             else:
@@ -213,12 +208,12 @@ class SimpleHeu():
     def destroyAndRebuild(self, newSol, sol_x, sol_q, cost, constraint):
         nF = 0
         nU = 0
-        oldConstraint = ''
+
         if len(constraint.split('_')) == 3:
             nConst, nRow, nCol = [int(x) for x in constraint.split('_')]
         elif len(constraint.split('_')) == 4:
             nConst, nRow, nCol, k = [int(x) for x in constraint.split('_')]
-        for i in range(4):
+        for i in range(5):
             if nConst == 8:  # constraint 8
                 table = []
                 for m in range(nRow, nRow + 2):
@@ -232,9 +227,9 @@ class SimpleHeu():
                 newSol[table[0][0], table[0][1]] = 1  # add lowest cost antenna
             elif nConst == 10:
                 # cellsR = np.zeros((2, 2))
-                # RCopy =
-                cellsR = deepcopy(self.prb.R[nRow - 1:nRow + 1, nCol - 1:nCol + 1])
-                # cellsR = cellsR
+                R0 = np.zeros((self.dict_data['antennaRow'] + 1, self.dict_data['antennaColumn'] + 1))  # Demand matrix, zeros in borders
+                R0[1:self.dict_data['antennaRow'], 1:self.dict_data['antennaColumn']] = deepcopy(self.prb.R)  # R in the center
+                cellsR = R0[nRow:nRow + 2, nCol:nCol + 2]
                 notFull = 0
                 while notFull < 4:
                     ind = np.unravel_index(np.argmax(cellsR, axis=None), cellsR.shape)
@@ -268,6 +263,5 @@ class SimpleHeu():
                 nConst, nRow, nCol = [int(x) for x in constraint.split('_')]
             elif len(constraint.split('_')) == 4:
                 nConst, nRow, nCol, k = [int(x) for x in constraint.split('_')]
-            oldConstraint = constraint
 
         return feasible, sol_x, sol_q, cost, constraint, nF, nU
