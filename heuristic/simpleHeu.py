@@ -5,6 +5,7 @@ import logging
 import random
 import numpy as np
 from pulp import *
+from copy import  deepcopy
 
 
 class SimpleHeu():
@@ -12,6 +13,7 @@ class SimpleHeu():
         self.prb = prb
         self.dict_data = dict_data
         self.costMax = sum(sum(prb.c))
+        # self.prb.R.flags.writeable = False
 
     def defineProbabilities(self, prob_type):
         R0 = np.zeros((self.dict_data['antennaRow'] + 1, self.dict_data['antennaColumn'] + 1))  # Demand matrix, zeros in borders
@@ -45,18 +47,22 @@ class SimpleHeu():
         sol_q = np.zeros((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
         countFeasible = 0
         countUnfeasible = 0
+        feasibleDaR = 0
+        unfeasibleDaR = 0
         totalProbability = self.defineProbabilities(prob_type)  # generate probability for each antenna
         for sol_iter in range(N_iter):
             newSol = np.zeros((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
             for i in range(self.dict_data['antennaRow']):
                 for j in range(self.dict_data['antennaColumn']):
                     newSol[i, j] = np.random.choice([0, 1], p=[1 - totalProbability[i, j], totalProbability[i, j]])
-            feasible, sol_x, sol_q, cost = self.validateFeasibility(newSol, sol_x, sol_q, cost)
+            feasible, sol_x, sol_q, cost, constraint = self.validateFeasibility(newSol, sol_x, sol_q, cost)
             if feasible:
                 countFeasible += 1
             else:
                 countUnfeasible += 1
-                # TODO implement destroy and rebuild
+                # feasible, sol_x, sol_q, cost, constraint, nF, nU = self.destroyAndRebuild(newSol, sol_x, sol_q, cost, constraint)
+                # feasibleDaR += nF
+                # unfeasibleDaR += nU
 
         end = time.time()
         comp_time = end - start
@@ -70,14 +76,20 @@ class SimpleHeu():
         sol_q = np.zeros((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
         countFeasible = 0
         countUnfeasible = 0
+        feasibleDaR = 0
+        unfeasibleDaR = 0
         for sol_iter in range(N_iter):
             newSol = np.random.choice([0, 1], size=(self.dict_data['antennaRow'], self.dict_data['antennaColumn']), p=[1 / 3, 2 / 3])
-            feasible, sol_x, sol_q, cost = self.validateFeasibility(newSol, sol_x, sol_q, cost)
+            feasible, sol_x, sol_q, cost, constraint = self.validateFeasibility(newSol, sol_x, sol_q, cost)
+            if sol_iter == 77:
+                pass
             if feasible:
                 countFeasible += 1
             else:
                 countUnfeasible += 1
-                # TODO implement destroy and rebuild
+                feasible, sol_x, sol_q, cost, constraint, nF, nU = self.destroyAndRebuild(newSol, sol_x, sol_q, cost, constraint)
+                feasibleDaR += nF
+                unfeasibleDaR += nU
         end = time.time()
         comp_time = end - start
         # print(countFeasible, countUnfeasible)
@@ -98,11 +110,12 @@ class SimpleHeu():
             newSol = sol_x_aux.reshape((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
             for sol_iter in range(N_iter):  # Try several times with the same number of zeros (The instance may repeat for small instances)
                 np.random.shuffle(newSol)
-                feasible, opt_sol_x, sol_q, cost = self.validateFeasibility(newSol, sol_x, sol_q, cost)
+                feasible, opt_sol_x, sol_q, cost, constraint = self.validateFeasibility(newSol, sol_x, sol_q, cost)
                 if feasible:
                     countFeasible_N[quantity_zeros] += 1
                 else:
                     countUnfeasible_N[quantity_zeros] += 1
+
             if countFeasible_N[quantity_zeros] == 0 and countUnfeasible_N[quantity_zeros] == N_iter:
                 uninstalled_ant = quantity_zeros - 1
                 # There are no more feasible solutions for lesser amount of installed antennas
@@ -128,7 +141,7 @@ class SimpleHeu():
             sol_x_aux[random_ant] = 1
             newSol = sol_x_aux.reshape((self.dict_data['antennaRow'], self.dict_data['antennaColumn']))
             for sol_iter in range(N_iter):
-                feasible, opt_sol_x, sol_q, cost = self.validateFeasibility(newSol, sol_x, sol_q, cost)
+                feasible, opt_sol_x, sol_q, cost, constraint = self.validateFeasibility(newSol, sol_x, sol_q, cost)
                 np.random.shuffle(newSol)
                 if feasible:
                     countFeasible_N[ant_number - 1] += 1
@@ -185,7 +198,7 @@ class SimpleHeu():
                 # print(prob.constraints[key])
                 feasible = False
                 # print('Unfeasible solution')
-                break
+                return feasible, sol_x, sol_q, cost, key
 
         if feasible:
             if cost > prob.objective.value():
@@ -195,4 +208,66 @@ class SimpleHeu():
                 for indQ in q:
                     sol_q[indQ[0], indQ[1]] = q[indQ[0], indQ[1]].varValue
 
-        return feasible, sol_x, sol_q, cost
+            return feasible, sol_x, sol_q, cost, key
+
+    def destroyAndRebuild(self, newSol, sol_x, sol_q, cost, constraint):
+        nF = 0
+        nU = 0
+        oldConstraint = ''
+        if len(constraint.split('_')) == 3:
+            nConst, nRow, nCol = [int(x) for x in constraint.split('_')]
+        elif len(constraint.split('_')) == 4:
+            nConst, nRow, nCol, k = [int(x) for x in constraint.split('_')]
+        for i in range(4):
+            if nConst == 8:  # constraint 8
+                table = []
+                for m in range(nRow, nRow + 2):
+                    for n in range(nCol, nCol + 2):
+                        if newSol[m, n] == 0:
+                            table.append([m, n, self.prb.c[m, n], self.prb.Q[m, n] - sol_q[m, n]])
+                table = np.array(table, dtype=int)
+                if len(table) == 0:
+                    feasible, opt_sol_x, sol_q, cost, constraint = self.validateFeasibility(newSol, sol_x, sol_q, cost)
+                table = table[np.lexsort((table[:, 3], table[:, 2]))]
+                newSol[table[0][0], table[0][1]] = 1  # add lowest cost antenna
+            elif nConst == 10:
+                # cellsR = np.zeros((2, 2))
+                # RCopy =
+                cellsR = deepcopy(self.prb.R[nRow - 1:nRow + 1, nCol - 1:nCol + 1])
+                # cellsR = cellsR
+                notFull = 0
+                while notFull < 4:
+                    ind = np.unravel_index(np.argmax(cellsR, axis=None), cellsR.shape)
+                    nRowAux = ind[0]-1+nRow
+                    nColAux = ind[1]-1+nCol
+                    if sum(sum(newSol[nRowAux:nRowAux+2, nColAux:nColAux+2])) == 4:
+                        cellsR[ind[0], ind[1]] = 0
+                        notFull += 1
+                    else:
+                        notFull = 4
+                        nRow = nRowAux
+                        nCol = nColAux
+                table = []
+                for m in range(nRow, nRow + 2):
+                    for n in range(nCol, nCol + 2):
+                        if newSol[m, n] == 0:
+                            table.append([m, n, self.prb.c[m, n], self.prb.Q[m, n] - sol_q[m, n]])
+                table = np.array(table, dtype=int)
+                table = table[np.lexsort((table[:, 3], table[:, 2]))]
+                newSol[table[0][0], table[0][1]] = 1  # add lowest cost antenna
+            else:
+                pass
+            feasible, opt_sol_x, sol_q, cost, constraint = self.validateFeasibility(newSol, sol_x, sol_q, cost)
+            if feasible:
+                nF += 1
+                break
+            else:
+                nU += 1
+
+            if len(constraint.split('_')) == 3:
+                nConst, nRow, nCol = [int(x) for x in constraint.split('_')]
+            elif len(constraint.split('_')) == 4:
+                nConst, nRow, nCol, k = [int(x) for x in constraint.split('_')]
+            oldConstraint = constraint
+
+        return feasible, sol_x, sol_q, cost, constraint, nF, nU

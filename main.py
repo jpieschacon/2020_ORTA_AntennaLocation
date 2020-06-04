@@ -8,6 +8,11 @@ from solver.antennaLocation import AntennaLocation
 from heuristic.simpleHeu import SimpleHeu
 from graph.graph import Graph
 
+# TODO add destroyAndRebuild
+# TODO change capacity distribution, add min capacity and modify instance.py
+# TODO change demand distribution
+# TODO change cost distribution
+
 np.random.seed(0)
 
 if __name__ == '__main__':
@@ -31,7 +36,7 @@ if __name__ == '__main__':
     prb = AntennaLocation(dict_data)
 
     # Solver
-    of_exact, sol_exact, sol_q, comp_time_exact, flagSolver = prb.solve(dict_data,verbose=True)
+    of_exact, sol_exact, sol_q, comp_time_exact, flagSolver = prb.solve(dict_data, verbose=True)
 
     grid = Graph(inst, sol_exact, sol_q)
     grid.plot('Solver')

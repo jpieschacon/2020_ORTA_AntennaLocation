@@ -69,11 +69,11 @@ class AntennaLocation():
                     self.prob += self.q_SW[m, n + 1] * k - self.R[m, n] * self.x[m, n + 1] <= (1 - self.z[m, n, k]) * self.Q[m, n + 1]*100, f"5_{m}_{n}_{k}"
                     self.prob += self.q_NE[m + 1, n] * k - self.R[m, n] * self.x[m + 1, n] <= (1 - self.z[m, n, k]) * self.Q[m + 1, n]*100, f"6_{m}_{n}_{k}"
                     self.prob += self.q_NW[m + 1, n + 1] * k - self.R[m, n] * self.x[m + 1, n + 1] <= (1 - self.z[m, n, k]) * self.Q[m + 1, n + 1]*100, f"7_{m}_{n}_{k}"
-                self.prob += self.q_SE[m, n] + self.q_SW[m, n + 1] + self.q_NE[m + 1, n] + self.q_NW[m + 1, n + 1] == self.R[m, n], f"lina_{m}_{n}"
+                self.prob += self.q_SE[m, n] + self.q_SW[m, n + 1] + self.q_NE[m + 1, n] + self.q_NW[m + 1, n + 1] == self.R[m, n], f"8_{m}_{n}"  # lina
         for i in range(dict_data['antennaRow']):
             for j in range(dict_data['antennaColumn']):
-                self.prob += self.q[i, j] == self.q_NW[i, j] + self.q_NE[i, j] + self.q_SW[i, j] + self.q_SE[i, j], f"8_{i}_{j}"
-                self.prob += self.q[i, j] <= self.Q[i, j] * self.x[i, j], f"9_{i}_{j}"
+                self.prob += self.q[i, j] == self.q_NW[i, j] + self.q_NE[i, j] + self.q_SW[i, j] + self.q_SE[i, j], f"9_{i}_{j}"
+                self.prob += self.q[i, j] <= self.Q[i, j] * self.x[i, j], f"10_{i}_{j}"
 
         self.prob.writeLP("./logs/{}.lp".format(self.problem_name))
         
