@@ -29,7 +29,7 @@ if __name__ == '__main__':
     fp.close()
 
     inst = Instance(
-        sim_setting
+        sim_setting, 'normal'
     )
     dict_data = inst.get_data()
 

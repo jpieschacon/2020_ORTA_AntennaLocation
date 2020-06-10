@@ -210,11 +210,11 @@ class SimpleHeu:
         nF = 0
         nU = 0
 
-        if len(constraint.split('_')) == 3:
+        if len(constraint.split('_')) == 3:  # identify variables c, x, R, Q, q, q_SE, q_SW, q_NE, q_NW
             nConst, nRow, nCol = [int(x) for x in constraint.split('_')]
-        elif len(constraint.split('_')) == 4:
+        elif len(constraint.split('_')) == 4:  # identify variable z
             nConst, nRow, nCol, k = [int(x) for x in constraint.split('_')]
-        for i in range(5):
+        for i in range(5):  # max 5 tries
             if nConst == 8:  # constraint 8
                 table = []
                 for m in range(nRow, nRow + 2):
@@ -230,27 +230,32 @@ class SimpleHeu:
                 # cellsR = np.zeros((2, 2))
                 R0 = np.zeros((self.dict_data['antennaRow'] + 1, self.dict_data['antennaColumn'] + 1))  # Demand matrix, zeros in borders
                 R0[1:self.dict_data['antennaRow'], 1:self.dict_data['antennaColumn']] = deepcopy(self.prb.R)  # R in the center
-                cellsR = R0[nRow:nRow + 2, nCol:nCol + 2]
+                cellsR = R0[nRow:nRow + 2, nCol:nCol + 2]  # demands around the nRow, nCol antenna
                 notFull = 0
                 while notFull < 4:
-                    ind = np.unravel_index(np.argmax(cellsR, axis=None), cellsR.shape)
-                    nRowAux = ind[0]-1+nRow
+                    flagFull = False
+                    ind = np.unravel_index(np.argmax(cellsR, axis=None), cellsR.shape)  # index for max demand cell
+                    nRowAux = ind[0]-1+nRow  # convert local coordinates to antennas coordinates
                     nColAux = ind[1]-1+nCol
                     if sum(sum(newSol[nRowAux:nRowAux+2, nColAux:nColAux+2])) == 4:
                         cellsR[ind[0], ind[1]] = 0
                         notFull += 1
+                        if sum(sum(cellsR)) == 0:
+                            flagFull = True
+                            notFull = 4
                     else:
                         notFull = 4
                         nRow = nRowAux
                         nCol = nColAux
-                table = []
-                for m in range(nRow, nRow + 2):
-                    for n in range(nCol, nCol + 2):
-                        if newSol[m, n] == 0:
-                            table.append([m, n, self.prb.c[m, n], self.prb.Q[m, n] - sol_q[m, n]])
-                table = np.array(table, dtype=int)
-                table = table[np.lexsort((table[:, 3], table[:, 2]))]
-                newSol[table[0][0], table[0][1]] = 1  # add lowest cost antenna
+                if not flagFull:
+                    table = []
+                    for m in range(nRow, nRow + 2):
+                        for n in range(nCol, nCol + 2):
+                            if newSol[m, n] == 0:
+                                table.append([m, n, self.prb.c[m, n], self.prb.Q[m, n] - sol_q[m, n]])
+                    table = np.array(table, dtype=int)
+                    table = table[np.lexsort((table[:, 3], table[:, 2]))]
+                    newSol[table[0][0], table[0][1]] = 1  # add lowest cost antenna
             else:
                 pass
             feasible, opt_sol_x, sol_q, cost, constraint = self.validateFeasibility(newSol, sol_x, sol_q, cost)
