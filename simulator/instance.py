@@ -13,7 +13,12 @@ class Instance():
         logging.info("starting simulation...")
         self.ar = sim_setting['antenna_row']
         self.ac = sim_setting['antenna_column']
-        self.Q = sim_setting['max_capacity'] * np.ones((sim_setting['antenna_row'], sim_setting['antenna_column']))
+        self.Q = np.around(np.random.uniform(
+            sim_setting['min_capacity'],
+            sim_setting['max_capacity'],
+            (sim_setting['antenna_row']) * (sim_setting['antenna_column'])
+        ))
+        self.Q = np.reshape(self.Q, [(sim_setting['antenna_row']), (sim_setting['antenna_column'])])
         self.R = np.around(np.random.uniform(
             sim_setting['min_demand'],
             sim_setting['max_demand'],

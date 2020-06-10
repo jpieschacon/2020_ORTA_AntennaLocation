@@ -8,7 +8,6 @@ from solver.antennaLocation import AntennaLocation
 from heuristic.simpleHeu import SimpleHeu
 from graph.graph import Graph
 
-# TODO change capacity distribution, add min capacity and modify instance.py
 # TODO change demand distribution
 # TODO change cost distribution
 # TODO execute using different seeds
