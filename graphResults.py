@@ -60,22 +60,39 @@ class Plot:
 
     def plot2D(self):
         df = self.df[self.df['rows'] == self.df['columns']]
-        fig = plt.figure()
+        plt.figure()
         for method in self.methods:
-            df_aux = df[df['method'] == method]
-            plt.semilogy(df_aux['rows'], df_aux['time'])
-            # plt.plot(df_aux['rows'], df_aux['time'])
+            if method != 'solver':
+                df_aux = df[df['method'] == method]
+                y = df_aux.groupby(['rows']).mean()['time']
+                x = df_aux.groupby(['rows']).mean()['columns']
+                sy = df_aux.groupby(['rows']).std()['time']
+                plt.errorbar(x, y, yerr=sy, marker='_')
         plt.legend(self.methods)
         plt.grid()
         plt.title('Execution time')
         plt.xlabel('Dimension (n x n)')
         plt.ylabel('Time (s)')
+        plt.yscale('log')
         plt.show()
-
+        plt.figure()
+        for method in self.methods:
+            df_aux = df[df['method'] == method]
+            y = df_aux.groupby(['rows']).mean()['time']
+            x = df_aux.groupby(['rows']).mean()['columns']
+            sy = df_aux.groupby(['rows']).std()['time']
+            plt.errorbar(x, y, yerr=sy, marker='_')
+        plt.legend(self.methods)
+        plt.grid()
+        plt.title('Execution time')
+        plt.xlabel('Dimension (n x n)')
+        plt.ylabel('Time (s)')
+        plt.yscale('log')
+        plt.show()
 
 if __name__ == '__main__':
     plot3D = Plot('results/exp_general_table_seed_0_9.csv')
     plot3D.plot3Dbar('Objective Function Ratio')
     plot3D.plot3Dbar('Execution Time')
-    plot2D = Plot('results/exp_general_table_seed_0.csv')
+    plot2D = Plot('results/exp_general_table_seed_0_9.csv')
     plot2D.plot2D()
