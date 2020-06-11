@@ -37,7 +37,7 @@ if __name__ == '__main__':
                 sim_setting['antenna_column'] = column
 
                 inst = Instance(
-                    sim_setting
+                    sim_setting, 'realistic'
                 )
                 dict_data = inst.get_data()
 
