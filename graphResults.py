@@ -56,6 +56,7 @@ class Plot:
             ax.set_xlabel('Rows')
             ax.set_ylabel('Columns')
             ax.set_zlabel(variable)
+            plt.savefig(f'results/Figures/3D_{variable}_{method}.pdf')
             plt.show()
 
     def plot2D(self):
@@ -67,13 +68,14 @@ class Plot:
                 y = df_aux.groupby(['rows']).mean()['time']
                 x = df_aux.groupby(['rows']).mean()['columns']
                 sy = df_aux.groupby(['rows']).std()['time']
-                plt.errorbar(x, y, yerr=sy, marker='_')
+                plt.errorbar(x, y, yerr=sy, marker='.')
         plt.legend(self.methods)
         plt.grid()
         plt.title('Execution time')
         plt.xlabel('Dimension (n x n)')
         plt.ylabel('Time (s)')
         plt.yscale('log')
+        plt.savefig('results/Figures/execution_time_mean.pdf')
         plt.show()
         plt.figure()
         for method in self.methods:
@@ -81,17 +83,18 @@ class Plot:
             y = df_aux.groupby(['rows']).mean()['time']
             x = df_aux.groupby(['rows']).mean()['columns']
             sy = df_aux.groupby(['rows']).std()['time']
-            plt.errorbar(x, y, yerr=sy, marker='_')
+            plt.errorbar(x, y, yerr=sy, marker='.')
         plt.legend(self.methods)
         plt.grid()
         plt.title('Execution time')
         plt.xlabel('Dimension (n x n)')
         plt.ylabel('Time (s)')
         plt.yscale('log')
+        plt.savefig('results/Figures/execution_time_mean_sol.pdf')
         plt.show()
 
 if __name__ == '__main__':
-    plot3D = Plot('results/exp_general_table_seed_0_9.csv')
+    plot3D = Plot('results/exp_general_table_seed_0_9_3D.csv')
     plot3D.plot3Dbar('Objective Function Ratio')
     plot3D.plot3Dbar('Execution Time')
     plot2D = Plot('results/exp_general_table_seed_0_9.csv')
