@@ -93,9 +93,64 @@ class Plot:
         plt.savefig('results/Figures/execution_time_mean_sol.pdf')
         plt.show()
 
+    def plot2DIter(self):
+        df = self.df[self.df['rows'] == self.df['columns']]
+
+        solver_time = df[df['method'] == 'solver'].iloc[0, 5]
+        solver_of = df[df['method'] == 'solver'].iloc[0, 6]
+        min_iter = df[df['iter'] != -1]['iter'].min()
+        max_iter = df[df['iter'] != -1]['iter'].max()
+
+        plt.hlines(solver_time, min_iter, max_iter, linestyles='dashdot', label='solver')
+        for method in self.methods:
+            if method != 'solver':
+                df_aux = df[df['method'] == method]
+                y_time = df_aux.groupby(['iter']).mean()['time']
+                x_time = df_aux.groupby(['iter']).mean().index
+                plt.plot(x_time, y_time, label=method)
+
+                # y = df_aux.groupby(['rows']).mean()['time']
+                # x = df_aux.groupby(['rows']).mean()['columns']
+                # sy = df_aux.groupby(['rows']).std()['time']
+                # plt.errorbar(x,y,yerr=sy,marker='_')
+        plt.legend()
+        plt.grid()
+        plt.title('Execution time')
+        plt.xlabel('Number of iterations')
+        plt.ylabel('Time (s)')
+        plt.yscale('log')
+        plt.savefig(f'results/Figures/time_iter_comparison_{df.iloc[0,2]}x{df.iloc[0,2]}.pdf')
+        plt.show()
+
+        plt.hlines(solver_of, min_iter, max_iter, linestyles='dashdot', label='solver')
+        # plt.show()
+
+        for method in self.methods:
+            if method != 'solver':
+                df_aux = df[df['method'] == method]
+                y_time = df_aux.groupby(['iter']).mean()['of']
+                x_time = df_aux.groupby(['iter']).mean().index
+                plt.plot(x_time, y_time, label=method)
+
+                # y = df_aux.groupby(['rows']).mean()['time']
+                # x = df_aux.groupby(['rows']).mean()['columns']
+                # sy = df_aux.groupby(['rows']).std()['time']
+                # plt.errorbar(x,y,yerr=sy,marker='_')
+        plt.legend()
+        plt.grid()
+        plt.title('Objective function')
+        plt.xlabel('Number of iterations')
+        plt.ylabel('Total cost')
+        # plt.yscale('log')
+        plt.savefig(f'results/Figures/cost_iter_comparison_{df.iloc[0,2]}x{df.iloc[0,2]}.pdf')
+        plt.show()
+
+
 if __name__ == '__main__':
     plot3D = Plot('results/exp_general_table_seed_0_9_3D.csv')
     plot3D.plot3Dbar('Objective Function Ratio')
     plot3D.plot3Dbar('Execution Time')
     plot2D = Plot('results/exp_general_table_seed_0_9.csv')
     plot2D.plot2D()
+    plot2DIter = Plot('results/exp_general_table_iter_8.csv')
+    plot2DIter.plot2DIter()
