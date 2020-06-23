@@ -8,11 +8,7 @@ from solver.antennaLocation import AntennaLocation
 from heuristic.simpleHeu import SimpleHeu
 from graph.graph import Graph
 
-# TODO change demand distribution
-# TODO change cost distribution
-# TODO execute using different seeds
-
-seed = 0
+seed = 1
 np.random.seed(seed)
 
 if __name__ == '__main__':
@@ -29,7 +25,7 @@ if __name__ == '__main__':
     fp.close()
 
     inst = Instance(
-        sim_setting, 'realistic'
+        sim_setting, 'uniform'
     )
     dict_data = inst.get_data()
 
@@ -56,14 +52,14 @@ if __name__ == '__main__':
     of_heu_pdf, sol_heux, sol_heuq, comp_time_heu_pdf = heu.solveRandomPDF(iter_number, 1)
 
     grid = Graph(inst, sol_heux, sol_heuq)
-    grid.plot('Random PDF heuristic')
+    grid.plot('PDFT1 heuristic')
     print(of_heu_pdf, comp_time_heu_pdf)
 
     # Beginning in the center
     of_heu_bic, sol_heux, sol_heuq, comp_time_heu_bic = heu.solveRandomPDF(iter_number, 2)
 
     grid = Graph(inst, sol_heux, sol_heuq)
-    grid.plot('Random BIC heuristic')
+    grid.plot('PDFT2 heuristic')
     print(of_heu_bic, comp_time_heu_bic)
 
     # From max number of antennas to 1 antenna heuristic

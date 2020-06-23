@@ -122,7 +122,7 @@ class Plot:
         plt.savefig(f'results/Figures/time_iter_comparison_{df.iloc[0,2]}x{df.iloc[0,2]}.pdf')
         plt.show()
 
-        plt.hlines(solver_of, min_iter, max_iter, linestyles='dashdot', label='solver')
+        plt.hlines(100, min_iter, max_iter, linestyles='dashdot', label='solver')
         # plt.show()
 
         for method in self.methods:
@@ -130,7 +130,7 @@ class Plot:
                 df_aux = df[df['method'] == method]
                 y_time = df_aux.groupby(['iter']).mean()['of']
                 x_time = df_aux.groupby(['iter']).mean().index
-                plt.plot(x_time, y_time, label=method)
+                plt.plot(x_time, 100*y_time/solver_of, label=method)
 
                 # y = df_aux.groupby(['rows']).mean()['time']
                 # x = df_aux.groupby(['rows']).mean()['columns']
@@ -140,9 +140,45 @@ class Plot:
         plt.grid()
         plt.title('Objective function')
         plt.xlabel('Number of iterations')
-        plt.ylabel('Total cost')
+        plt.ylabel('Total cost ratio (%)')
         # plt.yscale('log')
         plt.savefig(f'results/Figures/cost_iter_comparison_{df.iloc[0,2]}x{df.iloc[0,2]}.pdf')
+        plt.show()
+
+    def plot2Ddistros(self):
+        df = self.df[self.df['rows'] == self.df['columns']]
+        distros = df['distro'][1:].unique()
+        for distro in distros:
+            df_aux = df[(df['distro'] == distro) & (df['flagSolver'] == 1)]
+            y = df_aux.groupby(['rows']).mean()['time']
+            sy = df_aux.groupby(['rows']).std()['time']
+            x = df_aux.groupby(['rows']).mean()['columns']
+            # plt.plot(x, y, label=distro)
+            plt.errorbar(x, y, yerr=sy, marker='.', label=distro)
+        plt.legend()
+        plt.grid()
+        plt.title('Execution time')
+        plt.xlabel('Dimension (n x n)')
+        plt.ylabel('Time (s)')
+        plt.yscale('log')
+        plt.savefig('results/Figures/execution_time_mean_distros.pdf')
+        plt.show()
+
+    def plot2DRatio(self):
+        df = self.df
+        for dimension in df['rows'].unique():
+            df_aux = df[(df['flagSolver'] == 1) & (df['rows'] == dimension)]
+            y = df_aux.groupby(['max_demand']).mean()['time']
+            x = df_aux.groupby(['max_demand']).mean()['ratio']
+            plt.plot(x, y, label=f"{dimension}x{dimension}")
+        plt.xlim([0, 1])
+        plt.grid()
+        plt.legend()
+        plt.title('Execution time')
+        plt.xlabel('Ratio (Rmn/Qij)')
+        plt.ylabel('Time (s)')
+        plt.yscale('log')
+        plt.savefig('results/Figures/execution_time_mean_ratio_Rmn_Qij.pdf')
         plt.show()
 
 
@@ -150,7 +186,13 @@ if __name__ == '__main__':
     plot3D = Plot('results/exp_general_table_seed_0_9_3D.csv')
     plot3D.plot3Dbar('Objective Function Ratio')
     plot3D.plot3Dbar('Execution Time')
-    plot2D = Plot('results/exp_general_table_seed_0_9.csv')
+    plot2D = Plot('results/exp_general_table0_9_v2.csv')
     plot2D.plot2D()
+    plot2DIter = Plot('results/exp_general_table_iter_4_2.csv')
+    plot2DIter.plot2DIter()
     plot2DIter = Plot('results/exp_general_table_iter_8.csv')
     plot2DIter.plot2DIter()
+    plot2Ddistros = Plot('results/exp_general_table_distros.csv')
+    plot2Ddistros.plot2Ddistros()
+    plot2DRatio = Plot('results/exp_general_table_ratio_NxN.csv')
+    plot2DRatio.plot2DRatio()

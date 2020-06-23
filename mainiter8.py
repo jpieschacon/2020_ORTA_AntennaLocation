@@ -10,12 +10,6 @@ from tqdm import tqdm
 
 from graph.graph import Graph
 
-# TODO change capacity distribution, add min capacity and modify instance.py
-# TODO change demand distribution
-# TODO change cost distribution
-# TODO execute using different seeds
-
-
 if __name__ == '__main__':
     log_name = "./logs/main.log"
     logging.basicConfig(

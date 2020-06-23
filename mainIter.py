@@ -7,13 +7,7 @@ from simulator.instance import Instance
 from solver.antennaLocation import AntennaLocation
 from heuristic.simpleHeu import SimpleHeu
 from tqdm import tqdm
-
 from graph.graph import Graph
-
-# TODO change capacity distribution, add min capacity and modify instance.py
-# TODO change demand distribution
-# TODO change cost distribution
-# TODO execute using different seeds
 
 
 if __name__ == '__main__':
@@ -29,7 +23,7 @@ if __name__ == '__main__':
     sim_setting = json.load(fp)
     fp.close()
 
-    for seed in tqdm(range(1, 10)):
+    for seed in tqdm(range(0, 10)):
         for row in tqdm(range(3, 10)):
             for column in tqdm(range(3, 10)):
                 np.random.seed(seed)
