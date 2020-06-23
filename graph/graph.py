@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Tue May 26 22:51:11 2020
-
-@author: Juan Sebastian Rojas Velandia 
-"""
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -15,7 +10,7 @@ class Graph():
         self.solution = solution
         self.sol_q = sol_q
 
-    def plot(self,title):
+    def plot(self, title):
 
         G = nx.grid_2d_graph(self.instance.ar, self.instance.ac)  # 4x4 grid
 
@@ -43,7 +38,7 @@ class Graph():
         label3 = nx.get_node_attributes(G, 'usedCapacity')
         labels = {}
         for key in label1:
-            labels[key] = f'c={int(label1[key])}\nq={round(label3[key],3)}\nQ={label2[key]}'
+            labels[key] = f'c={int(label1[key])}\nq={round(label3[key], 3)}\nQ={label2[key]}'
         for i in range(self.instance.ar - 1):
             for j in range(self.instance.ac - 1):
                 G.add_edge((i, j), (i + 1, j + 1), label=self.instance.R[i, j])
@@ -52,6 +47,7 @@ class Graph():
         nx.draw_networkx(G, my_pos, font_size=8, node_color=color, labels=labels)
         nx.draw_networkx_edge_labels(G, my_pos, edge_labels=labeledge)
         plt.title(title)
-        print(title+':')
+        print(title + ':')
+        plt.box(False)
         plt.savefig(f'results/Figures/Instances/instance_{title}.pdf')
         plt.show()
