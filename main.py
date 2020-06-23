@@ -12,7 +12,7 @@ from graph.graph import Graph
 # TODO change cost distribution
 # TODO execute using different seeds
 
-seed = 0
+seed = 1
 np.random.seed(seed)
 
 if __name__ == '__main__':
@@ -29,7 +29,7 @@ if __name__ == '__main__':
     fp.close()
 
     inst = Instance(
-        sim_setting, 'realistic'
+        sim_setting, 'uniform'
     )
     dict_data = inst.get_data()
 
@@ -80,12 +80,12 @@ if __name__ == '__main__':
     grid.plot('Random 1-to-N heuristic')
     print(of_heu_12N, comp_time_heu_12N, min_ant_num)
 
-    # printing results of a file
-    file_output = open("./results/exp_general_table.csv", "a")
-    file_output.write(f"{seed},{sim_setting['antenna_row']},{sim_setting['antenna_column']},{'solver'},{-1},{comp_time_exact},{of_exact}\n")
-    file_output.write(f"{seed},{sim_setting['antenna_row']},{sim_setting['antenna_column']},{'random'},{iter_number},{comp_time_heu_random},{of_heu_random}\n")
-    file_output.write(f"{seed},{sim_setting['antenna_row']},{sim_setting['antenna_column']},{'PDF'},{iter_number},{comp_time_heu_pdf},{of_heu_pdf}\n")
-    file_output.write(f"{seed},{sim_setting['antenna_row']},{sim_setting['antenna_column']},{'BIC'},{iter_number},{comp_time_heu_bic},{of_heu_bic}\n")
-    file_output.write(f"{seed},{sim_setting['antenna_row']},{sim_setting['antenna_column']},{'N21'},{iter_number},{comp_time_heu_N21},{of_heu_N21}\n")
-    file_output.write(f"{seed},{sim_setting['antenna_row']},{sim_setting['antenna_column']},{'12N'},{iter_number},{comp_time_heu_12N},{of_heu_12N}\n")
-    file_output.close()
+    # # printing results of a file
+    # file_output = open("./results/exp_general_table.csv", "a")
+    # file_output.write(f"{seed},{sim_setting['antenna_row']},{sim_setting['antenna_column']},{'solver'},{-1},{comp_time_exact},{of_exact}\n")
+    # file_output.write(f"{seed},{sim_setting['antenna_row']},{sim_setting['antenna_column']},{'random'},{iter_number},{comp_time_heu_random},{of_heu_random}\n")
+    # file_output.write(f"{seed},{sim_setting['antenna_row']},{sim_setting['antenna_column']},{'PDF'},{iter_number},{comp_time_heu_pdf},{of_heu_pdf}\n")
+    # file_output.write(f"{seed},{sim_setting['antenna_row']},{sim_setting['antenna_column']},{'BIC'},{iter_number},{comp_time_heu_bic},{of_heu_bic}\n")
+    # file_output.write(f"{seed},{sim_setting['antenna_row']},{sim_setting['antenna_column']},{'N21'},{iter_number},{comp_time_heu_N21},{of_heu_N21}\n")
+    # file_output.write(f"{seed},{sim_setting['antenna_row']},{sim_setting['antenna_column']},{'12N'},{iter_number},{comp_time_heu_12N},{of_heu_12N}\n")
+    # file_output.close()

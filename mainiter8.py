@@ -45,11 +45,11 @@ if __name__ == '__main__':
     # grid.plot('Solver')
     # print(of_exact, comp_time_exact)
 
-    for seed in tqdm(range(0, 10)):
-        np.random.seed(seed)
-            
-        for itervalue in tqdm([5, 10, 50, 100, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000]):
-            
+    for itervalue in tqdm([5, 10, 50, 100, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000]):
+        
+        for seed in tqdm(range(0, 10)):
+                
+            np.random.seed(seed)
             heu = SimpleHeu(prb, dict_data)
             iter_number = itervalue
 

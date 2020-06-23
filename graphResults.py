@@ -89,10 +89,30 @@ class Plot:
         plt.ylabel('Time (s)')
         plt.yscale('log')
         plt.show()
+        
+    def plotBox(self):
+        df=self.df
+        distan=df['seed'].unique()
+        d = []
+        c = "red"
+        for i in distan:
+            d.append(np.array(df['time'][(df['seed']==i).values], dtype=float))
+        plt.figure()
+        plt.boxplot(d,labels=distan,patch_artist=True,boxprops=dict(facecolor=c, color=c))
+        plt.grid()
+        plt.xlabel('seed')
+        plt.ylabel('time')
+        plt.title('solver')
+        plt.savefig('solver')
+        plt.show()
+
+
 
 if __name__ == '__main__':
-    plot3D = Plot('results/exp_general_table_seed_0_9.csv')
-    plot3D.plot3Dbar('Objective Function Ratio')
-    plot3D.plot3Dbar('Execution Time')
-    plot2D = Plot('results/exp_general_table_seed_0_9.csv')
-    plot2D.plot2D()
+    # plot3D = Plot('results/exp_general_table_seed_0_9.csv')
+    # plot3D.plot3Dbar('Objective Function Ratio')
+    # plot3D.plot3Dbar('Execution Time')
+    # plot2D = Plot('results/exp_general_table_seed_0_9.csv')
+    # plot2D.plot2D()
+    plotbox=Plot('results/exp_general_table_iter_same_solver6_v5.csv')
+    plotbox.plotBox()
