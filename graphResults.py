@@ -181,6 +181,22 @@ class Plot:
         plt.savefig('results/Figures/execution_time_mean_ratio_Rmn_Qij.pdf')
         plt.show()
 
+    def plotBox(self):
+            df = self.df
+            distan = df['seed'].unique()
+            d = []
+            c = "red"
+            for i in distan:
+                d.append(np.array(df['time'][(df['seed'] == i).values], dtype=float))
+            plt.figure()
+            plt.boxplot(d, labels=distan, patch_artist=True, boxprops=dict(facecolor=c, color=c))
+            plt.grid()
+            plt.xlabel('seed')
+            plt.ylabel('time')
+            plt.title('solver')
+            plt.savefig('solver')
+            plt.show()
+
 
 if __name__ == '__main__':
     plot3D = Plot('results/exp_general_table_seed_0_9_3D.csv')
@@ -196,3 +212,5 @@ if __name__ == '__main__':
     plot2Ddistros.plot2Ddistros()
     plot2DRatio = Plot('results/exp_general_table_ratio_NxN.csv')
     plot2DRatio.plot2DRatio()
+    plotbox = Plot('results/exp_general_table_iter_same_solver6_v5.csv')
+    plotbox.plotBox()
