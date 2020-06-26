@@ -4,13 +4,14 @@ import numpy as np
 
 
 class Instance:
-    def __init__(self, sim_setting, distribution):
+    def __init__(self, sim_setting):
         """[summary]
         
         Arguments:
             sim_setting {[type]} -- [description]
         """
         logging.info("starting simulation...")
+        distribution = sim_setting['distribution']
         self.ar = sim_setting['antenna_row']
         self.ac = sim_setting['antenna_column']
         self.Q = None
