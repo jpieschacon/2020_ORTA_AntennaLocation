@@ -1,29 +1,68 @@
 # Antenna Location Problem
 
-Let us consider a set of squared cells, each one characterized by a different demand 𝑅𝑖𝑗. We can
+Let us consider a set of squared cells, each one characterized by a different demand R<sub>mn</sub>. We can
 install the antennas in the vertexes of each cell. Hence, the possible locations are the ones shown
 below. Each antenna absorbs demand by all the four cells that share the vertex in which the
 antenna is located.
 
-![Problem description](images/problem.PNG)
+![Problem description](images/problemDescription.PNG)
 
-If more antennas cover a cell (as below) 𝑅𝑖𝑗 is equally divided among all the antennas.
+If more antennas cover a cell (as below) R<sub>mn</sub> is equally divided among all the antennas.
 
-Each antenna has a maximum capacity that must not be exceeded 𝑞𝑖𝑗 and an installation cost 𝑐𝑖𝑗.
+Each antenna has a maximum capacity that must not be exceeded q<sub>ij</sub> and an installation cost c<sub>ij</sub>.
 The objective is to minimize the total cost while covering all the demand.
 
 ## Scripts
-### main.py
+### /etc/config.json(Config file)
+Every instance generation needs configuration settings. The configured parameters will define the nature of the input instance.
+
+| Variable | Description |
+| ------------- | ------------------------- |
+| antenna_row|     Number of rows of the grid |
+| antenna_column|   Number of columns of the grid  |
+| max_capacity|     Maximum capacity for each antenna |
+| min_capacity|   Minimum capacity for each antenna|
+| max_demand|    Maximum traffic demand for each cell|
+| min_demand|    Minimum traffic demand for each cell |
+| max_cost|      Maximum installation cost for each antenna |
+| min_cost|     Minimum installation cost for each antenna |
  
-###
+```json
+{
+	"antenna_row":4, 
+	"antenna_column":4,
+	"max_capacity":40,
+	"min_capacity":20,
+	"max_demand":25,
+	"min_demand":15,
+	"max_cost":10000,
+	"min_cost":8000,
+	"distribution": "uniform"
+}
+```
+There are three input instances:R<sub>mn</sub>,c<sub>ij</sub>, and q<sub>ij</sub>.  The generation of these inputs is based on the specific test that will be performed to the exact and heuristic solutions.  Moreover, each entry sample can be generated using different distributions.
+For executing each script, the **config file must be modified** according with the defined input instance or each test.
 
-
-
-
-
-
-
-
+### /graph/graph.py
+JS
+### /heuristic/simpleHeu.py
+F
+### /simulator/instance.py
+JG
+### main.py
+This script will execute the solver and the heuristic methods for only one instance, 
+### mainIter.py
+L
+### mainIterDistro.py
+F
+### mainIterHeuristic.py
+L
+### mainIterRatio.py
+F
+### mainSolverStd.py
+JS
+### graphResults.py
+JG
 
 
 
