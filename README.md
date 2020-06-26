@@ -45,6 +45,11 @@ For executing each script, the **config file must be modified** according with t
 
 ### /graph/graph.py
 JS
+With the objective of visualizing the given solution for every instance and test, a script that generates a graph was created. One of the generated images is ilustrated below. The green dots symbolize that the antenna was installed, while the red represent the non-installation of them. 
+
+In every vertex, it is indicated the installation cost (c), the portion of capacity given (q), and the total capacity (Q) of each antenna. The demand required by each cell is depicted in the center of every four adjacent antennas.
+
+![Graph problem](images/instance_Solver(1).pdf)
 ### /heuristic/simpleHeu.py
 F
 ### /simulator/instance.py
@@ -61,6 +66,15 @@ L
 F
 ### mainSolverStd.py
 JS
+
+In this script, the seeds of the grid are varied. For each seed, the solver is executed a define number of iterations that is set in iternumber. Finally, the solution is stored in a csv file.
+
+```bash
+    seeds_number = 30  # Number of seeds
+    iterNumber = 100
+```
+
+
 ### graphResults.py
 JG
 
