@@ -55,9 +55,9 @@ This script executes the solver and the heuristic methods for only one instance.
     iter_number = 1000  # Max number of iteration for each heuristic algorithm
     output_file = "./results/exp_general_table.csv"  # output file
 ```
-After the execution of this script it is possible to see in console the total cost and the compsumed time for each method. Moreover, the graphs with the instance and the solution of each method are generated and stored in results/Figures/Instances.
+After the execution of this script it is possible to see in console the total cost and the consumed time for each method. Moreover, the graphs with the instance and the solution of each method are generated and stored in results/Figures/Instances.
 ### mainIter.py
-In this script the seeds and dimensions of the grid are varied. In addition to the execution time and number of iterations, the parameters to be set are the maximun and minimum number of columns and rows, and the number of seeds. 
+In this script, the seeds and dimensions of the grid are varied. In addition to the execution time and number of iterations, the parameters to be set are the maximun and minimum number of columns and rows, and the number of seeds. 
 ```bash
    seeds_number = 10  # Number of seeds
     row_min = 3  # Minimum number of rows
