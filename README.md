@@ -40,7 +40,7 @@ Every instance generation needs configuration settings. The configured parameter
 	"distribution": "uniform"
 }
 ```
-There are three input instances:R<sub>mn</sub>,c<sub>ij</sub>, and q<sub>ij</sub>.  The generation of these inputs is based on the specific test that will be performed to the exact and heuristic solutions.  Moreover, each entry sample can be generated using different distributions.
+There are three input instances:R<sub>mn</sub>,c<sub>ij</sub>, and q<sub>ij</sub>. The generation of these inputs is based on the specific test that will be performed to the exact and heuristic solutions. Moreover, each entry sample can be generated using different distributions.
 For executing each script, the **config file must be modified** according with the defined input instance or each test.
 
 ### /graph/graph.py
@@ -48,7 +48,12 @@ JS
 ### /heuristic/simpleHeu.py
 F
 ### /simulator/instance.py
-JG
+instance.py has the task to generate every instance for each one of the tests. The constructor of the class Instance() receives all the parameters included in the configuration file *config.json*.
+The method get_data() returns the instance more relevant information, the demand *R*, the total capacity *Q*, the cost *C*, number of grid rows *ar*, and the number of grid columns *ac*.
+
+The methods distribution_uniform(), distribution_gauss(), and realistic() are only called if the parameter "distribution" in *config.json* is correctly entered.
+These methods define how the instances for demand *R*, total capacity *Q*, and the cost *C* are going to be constructed making use also of the configuration parameters: "antenna_row",	"antenna_column", "max_capacity", "min_capacity", "max_demand", "min_demand", "max_cost", and "min_cost". 
+Further explanation of how instances where created can be found in Section 4 of the report.
 ### main.py
 This script will execute the solver and the heuristic methods for only one instance, 
 ### mainIter.py
@@ -62,10 +67,13 @@ F
 ### mainSolverStd.py
 JS
 ### graphResults.py
-JG
-
-
-
+graphResults.py was created to plot all of our results, the class Plot() includes the methods: plot3Dbar, plot2D, plot2DIter, plot2Ddistros, plot2DRatio, and plotBox. The constructor of Plot() only needs as input the path of the data that is intended to be processed and plotted. The result of each graph is stored in the path results/Figures. 
+The method plot3Dbar only receives as input the z axis title, and plots the execution time and objective function of every heuristic w.r.t. the solver (Results depicted in Test 1 Section 6.1).  
+The method plot2D does not have any input argument, plots the execution time vs the dimensions of the grid of the solver and every heuristic method (Results depicted in Test 1 Section 6.1). 
+The method plot2DIter does not have any input argument, plots the total cost ratio vs the number of iterations or plots the execution time vs the number of iterations of every heuristic having as reference the solver (Results depicted in Test 2 Section 6.2).
+The method plot2Ddistros does not have any input argument, plots the execution time vs the NxN grid dimensions comparing the different proposed input instances (Results depicted in Test 4 Section 6.4).
+The method plot2DRatio does not have any input argument, plots the execution time vs the ratio between R<sub>mn</sub> and Q<sub>ij</sub> for different NxN grid instances (Results depicted in Test 3 Section 6.3).
+The method plotBox does not have any input argument, plots the descriptive analysis of running the solver for a given number of iterations for a same seed (Results depicted in Test 5 Section 6.5).  
 
 ```bash
 python -m parlai.scripts.eval_model -m ir_baseline -t personachat -dt valid
